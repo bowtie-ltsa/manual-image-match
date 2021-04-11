@@ -1,0 +1,83 @@
+﻿body 
+{
+    padding-top: 50px; /* needed when using navbar-fixed-top for topnav */
+}
+
+
+.lobster-big
+{
+    font-weight: 100;
+    font-size: 38px;
+    line-height: 1.7;
+    font-family: 'Lobster Two', Helvetica, sans-serif;
+    /*color: green;*/
+}
+
+.lobster-xl
+{
+    font-weight: 300;
+    font-size: 75px;
+    line-height: 1.0;
+    font-family: 'Lobster Two', Helvetica, sans-serif;
+    /*color: green;*/
+}
+
+.lobster
+{
+    font-family: 'Lobster Two', Helvetica, sans-serif;
+}
+
+.tbd
+{
+    border: 1px dotted red;
+}
+
+.text-right
+{
+    text-align: right;
+}
+
+.text-overlay-container
+{
+    position: relative;
+}
+
+.text-overlay-text
+{
+    position: absolute;
+    top: 100px;
+    left: 15px;
+    width: 100%;
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.text-wrap
+{
+    white-space: normal;
+}
+
+
+
+.image-credits img
+{
+    max-width: 100%;
+    max-height: 100px;
+}
+
+.image-credits .row
+{
+    border-bottom: 1px solid gray;
+    padding: 15px;
+}
+
+.image-credits dt
+{
+    text-align: center;
+}
+
+.highlights h3, .highlights h2
+{
+    color: #042b51;
+}

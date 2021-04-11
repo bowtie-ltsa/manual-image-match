@@ -1,0 +1,4 @@
+.env*
+*-novcs-*
+*.log
+.vs/
