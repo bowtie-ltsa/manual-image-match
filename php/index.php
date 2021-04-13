@@ -27,12 +27,25 @@
                 <br />
                 <div class="row">
                     <div class="col-xs-12 text-center">
-                        <h3>
+                        <h3 class="text-primary">
                             Allowing volunteers to<br />
                             identify recaptures by hand
                         </h3>
                     </div>
                 </div>
+                <br />
+                <form class="form-horizontal" action="set-volunteer.php">
+                    <div class="row form-group form-inline">
+                        <div class="col-xs-12 text-center">
+                            <label for="vid">Volunteer Id:</label>
+                            <input class="form-control" type="text" name="vid" id="vid" autocomplete="off" 
+                                    autofocus onfocus="this.select();"
+                                    value="<?=$_COOKIE['vid']?>" 
+                                    />
+                            <button class="btn btn-primary" type="submit">Let's match!</button>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="col-sm-6">
                 <div class="row">
