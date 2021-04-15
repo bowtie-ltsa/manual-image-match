@@ -2,3 +2,6 @@
 *-novcs-*
 *.log
 .vs/
+
+**/config/*.csv
+!**/config/*-example.csv
