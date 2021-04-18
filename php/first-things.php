@@ -21,8 +21,8 @@
         $list = readCsv($filename);
         foreach($list as $item) {
             $name = $item['name'];
-            $folders = explode(",", $item['foldersCSV']);
-            $acct = new Account($name, $folders);
+            // $folders = explode(",", $item['foldersCSV']);
+            $acct = new Account($name);
             $accounts[$name] = $acct;
         }
         return $accounts;
