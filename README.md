@@ -66,9 +66,13 @@ To handle volunteers that drop out, we prioritize their `open` image pairs at th
 # local host using docker
 - choco install docker-desktop
 - configure docker to allow folder access to the php directory
+- pull image
+  ```
+    docker image pull php:7.2-apache
+  ```
 - start container
   ```cmd
-  docker run --rm -d -p 8123:80 --name manual-image-match -v C:\github\bowtie-ltsa\manual-image-match\php:/var/www/html php:7.4-apache
+    docker run --rm -d -p 8123:80 --name manual-image-match -v C:\github\bowtie-ltsa\manual-image-match\php:/var/www/html php:7.2-apache
   ```
 - browse to http://localhost:8123/
 

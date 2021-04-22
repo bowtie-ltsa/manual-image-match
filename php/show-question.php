@@ -8,8 +8,12 @@
     $pm = new ImagePairManager();
     $q = intval($_GET["q"]); // if not present; we will take the user to an unanswered image pair
     $ok = true;
-    list($pair, $ok) = $pm->getImagePair($vid, $q);
-    if (!$ok) {
+    list($pair, $err) = $pm->getImagePair($vid, $q);
+    if ($err instanceof BusyException) {
+        header("Location: please-wait.php?vid=$vid&q=$pair->q()");
+        exit();
+    }
+    if ($err != null) {
         header("Location: no-more-questions.php?vid=$vid&q=$pair->q()");
         exit();
     }

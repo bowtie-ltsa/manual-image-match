@@ -3,8 +3,19 @@
     
     define("CONFIG", "config/");
     define("ACCOUNTS", "accounts.csv");
-    define("DATADIR", "/var/www/html/data-novcs-/");
+    define("LOCKTIME", 3000);
 
+    function debug(...$args) {
+        foreach($args as $arg) { echo $arg . " "; }
+        echo "<br />\n";
+    }
+
+    function define_DATADIR() {
+        $datadirFile = sprintf("%sdatadir-%s.txt", CONFIG, explode(":", $_SERVER['HTTP_HOST'])[0]);
+        $datadir = file_get_contents($datadirFile);
+        define("DATADIR", $datadir);
+    }
+    define_DATADIR();
 
     function readCsv(string $filename): array {
         $rows   = array_map('str_getcsv', file($filename)); // consider fgetcsv() loop instead to process newlines in values, and to save memory

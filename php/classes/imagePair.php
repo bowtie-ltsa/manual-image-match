@@ -3,9 +3,9 @@
     require_once "first-things.php";
 
     class ImagePair {
-        private int $q;
-        public string $image1 = "(not set)";
-        public string $image2 = "(not set)";
+        private $q;
+        public $image1 = "(not set)";
+        public $image2 = "(not set)";
 
         public function __construct(int $q, string $image1, string $image2) { 
             $this->q = $q;

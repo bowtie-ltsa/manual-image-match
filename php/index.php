@@ -57,7 +57,7 @@
                 </div>
             </div>
         </div>
-        <?php require "_zFooter-Nav.html" ?>
+        <?php require "_zFooter-Nav.php" ?>
     </div> <!-- /container -->
     <?php require "_zFooter-zBootstrap.html" ?>
 </body>
