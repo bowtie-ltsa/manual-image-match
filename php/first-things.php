@@ -3,6 +3,7 @@
     
     define("CONFIG", "config/");
     define("ACCOUNTS", "accounts.csv");
+    define("DATADIR", "/var/www/html/data-novcs-/");
 
 
     function readCsv(string $filename): array {

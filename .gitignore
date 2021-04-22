@@ -3,5 +3,5 @@
 *.log
 .vs/
 
-**/config/*.csv
-!**/config/*-example.csv
+**/config/
+!**/config/*-example*

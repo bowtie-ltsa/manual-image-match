@@ -3,22 +3,27 @@
     require_once "first-things.php";
     require_once "get-volunteer.php";
 
-    $q = $_GET["q"]
-    if (!isset($q) || !is_numeric($q)) {
-        header('Location: show-question.php?vid=$vid&q=1');
+
+    require_once "classes/imagePairManager.php";
+    $pm = new ImagePairManager();
+    $q = intval($_GET["q"]); // if not present; we will take the user to an unanswered image pair
+    $ok = true;
+    list($pair, $ok) = $pm->getImagePair($vid, $q);
+    if (!$ok) {
+        header("Location: no-more-questions.php?vid=$vid&q=$pair->q()");
         exit();
     }
-
-    require_once "read-vid-pair.php"
-    $pair = readVidPair($vid, $q)
-    if $pair->q() != $q {
-        header("Location: show-question.php?vid=$vid&q=$pair->q()");
+    if ($pair->q() != $q) { // actual pair does not match requested pair
+        // redirect so the page is properly bookmarkable
+        $q = $pair->q();
+        header("Location: show-question.php?vid=$vid&q=$q");
         exit();
     }
 ?>
 <pre>
 now we know what pair of photos to show:
 <?print_r($pair)?>
+and q() is <?= $pair->q() ?>.
 </pre>
 
 hello <?=$vid?>.<br>
