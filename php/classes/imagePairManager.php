@@ -7,6 +7,9 @@
     require_once "fileOrEmpty.php";
     class ImagePairManager {
 
+        public const IMAGE_DATA_DIR = 'image-data/';
+
+
         // getImagePair() returns the requested image pair $q, if possible, or an alternate pair if possible, or null if there are problems.
         public function getImagePair(string $vid, ?int $q): array { // ImagePair, Exception
             $mu = new Mutex("$vid-pairs");
@@ -63,6 +66,22 @@
 
         // createAllPairs() creates a random list of all pairs of images, unallocated to any volunteers.
         private function createAllPairs(): array {
+            $imageFiles = scandir(ImagePairManager::IMAGE_DATA_DIR); // index 0 and 1 are . and ..
+            $allPairs = array();
+            $allPairs[] = "image1,image2,vids";
+            //var_dump($imageFiles);
+            foreach($imageFiles as $image1) {
+                if ($image1 == "." || $image1 == "..") { continue; }
+                foreach($imageFiles as $image2) {
+                    if ($image2 == "." || $image2 == "..") { continue; }
+                    if ($image1 == $image2) { continue; }
+                    // todo: skip image2 if from same day as image1, using regex
+                    $allPairs[] = sprintf("\"%s\",\"%s\",\"\"", $image1, $image2);
+                }
+            }
+            echo "<pre>";
+            var_dump($allPairs);
+            echo "</pre>";
             die("implement create all pairs");
             // if the file "all-pairs.txt" exists then panic.
             // create all-pairs array in memory, and shuffle it.
