@@ -16,7 +16,7 @@
     define("LOCKTIME", 3000);
     define("ALLPAIRS_LIST_FILENAME", DATA_DIR . 'all-pairs-list.psv');
     define("ALLPAIRS_ALLOC_FILENAME", DATA_DIR . 'all-pairs-allocations.psv');
-    define("ROUND_FILENAME", DATA_DIR . 'round.txt');
+    define("CURRENT_ROUND_FILENAME", DATA_DIR . 'current-round.txt');
 
     function debug(...$args) {
         foreach($args as $arg) { echo $arg . " "; }

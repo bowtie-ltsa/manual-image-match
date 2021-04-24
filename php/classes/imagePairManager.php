@@ -5,7 +5,7 @@
     require_once("classes/folderPair.php");
     require_once "classes/imagePair.php";
     require_once "classes/mutex.php";
-    require_once "fileOrEmpty.php";
+    require_once "functions/file-functions.php";
     class ImagePairManager {
 
         // getImagePair() returns the requested image pair $q, if possible, or an alternate pair if possible, or null if there are problems.
@@ -47,9 +47,24 @@
                 if (count($allPairs) == 0) {
                     $allPairs = $this->createAllPairs();
                 }
-                die("implement allocatePair next step");
-                // if the file "$vid-next.txt" does not exist, write "0".
-                // if len($vid-results.txt) >= len(all-pairs.txt), return null: volunteer has matched every pair and has no more pairs to match.
+                $allPairsCount = count($allPairs);
+
+                $vidResults = fileOrEmpty(vidResultsFilename($vid));
+                if (count($vidResults) >= $allPairsCount) { 
+                    // we cannot allocate an image pair to the volunteer
+                    // volunteer has finished (i.e. volunteer has already provided an answer for every image pair)
+                    return null;
+                }
+
+                $currentRound = fileInt(CURRENT_ROUND_FILENAME);
+                $vidNext = fileInt(vidNextFilename($vid), 1);
+                for ($n = $vidNext; $n < $allPairsCount; $n++) {
+                    $imagePairLine = &$allPairs[$n];
+                    debug("considering line $n: $imagePairLine.");
+                    break;
+                }
+                die("got to here");
+
                 // starting at $($vid-next.txt), find the first image pair that has been allocated $(current-pass.txt) times.
                 // if none, invoke prepareNextPass() and find the first image pair that has been allocated $(current-pass.txt) times.
                 // if none (shouldn't happen!) return null.
@@ -113,7 +128,7 @@
             array_splice($allPairs, 0, 1);
 
             // prepare for the first round: set round#
-            file_put_contents(ROUND_FILENAME, "0");
+            file_put_contents(CURRENT_ROUND_FILENAME, "0");
 
             // prepare for the first round: shuffle the list
             shuffle($allPairs);

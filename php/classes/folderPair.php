@@ -14,7 +14,7 @@
         }
 
         public function writeFile() {
-            file_put_contents(DATA_DIR . $this->filename, json_encode($this));
+            file_put_contents(DATA_DIR . $this->filename, json_encode($this, JSON_PRETTY_PRINT));
         }
 
         // todo: public static function readFromFile(string $filename)
