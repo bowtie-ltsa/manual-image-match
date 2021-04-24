@@ -23,9 +23,9 @@
                     exit();
                 }
 
-                $pair = $this->allocatePair($vid);
-                if ($pair == null) {
-                    return array(null, new BusyException());
+                list($pair, $err) = $this->allocatePair($vid);
+                if ($err) {
+                    return array(null, $err);
                 }
                 return array($pair, null);
             }
@@ -37,15 +37,16 @@
         // AllocatePair() allocates an image pair to a volunteer; it returns null if the volunteer has already matched all image pairs,
         // or if the volunteer has not yet recorded an answer for their current allocated image pair. (That is, a volunteer is only ever
         // allocated at most one unanswered image pair, and there are only ever, at most, len(accounts.txt) unanswered image pairs.)
-        private function allocatePair(string $vid): ImagePair {
+        private function allocatePair(string $vid): array { // ImagePair, Exception
             $mu = new Mutex("all-pairs-allocations");
             if (!$mu->lock()) {
-                return null;
+                return array(null, new BusyException());
             }
             try {
                 $allPairs = fileOrEmpty(ALLPAIRS_ALLOC_FILENAME);
                 if (count($allPairs) == 0) {
-                    $allPairs = $this->createAllPairs();
+                    $this->createAllPairs();
+                    return array(null, new HaltException());
                 }
                 $allPairsCount = count($allPairs);
 
@@ -53,7 +54,7 @@
                 if (count($vidResults) >= $allPairsCount) { 
                     // we cannot allocate an image pair to the volunteer
                     // volunteer has finished (i.e. volunteer has already provided an answer for every image pair)
-                    return null;
+                    return array(null, new VidFinishedException());
                 }
 
                 $currentRound = fileInt(CURRENT_ROUND_FILENAME);
@@ -63,7 +64,8 @@
                     debug("considering line $n: $imagePairLine.");
                     break;
                 }
-                die("got to here");
+                debug("got to here");
+                return array(null, new HaltException());
 
                 // starting at $($vid-next.txt), find the first image pair that has been allocated $(current-pass.txt) times.
                 // if none, invoke prepareNextPass() and find the first image pair that has been allocated $(current-pass.txt) times.
@@ -109,15 +111,16 @@
                         new ImageFolder($i, $allDirs[$i], $leftImageCount),
                         new ImageFolder($j, $allDirs[$j], $rightImageCount)
                     );
-                    $folderPair->writeFile();
                     for ($x = 0; $x < $leftImageCount; $x++) {
                         for ($y = 0; $y < $rightImageCount; $y++) {
                             $X = $x+1; $Y = $y+1;
                             writeln("--- F${I}C$X-F${J}C$Y: $leftImages[$x] --- $rightImages[$y]");
                             $pairCount++;
                             $allPairs[] = sprintf("$pairCount|F${I}|F${J}|F${I}C$X|F${J}C$Y|$leftImages[$x]|$rightImages[$y]|");
+                            //$folderPair->addImagePair(new FolderImagePair(....))
                         }
                     }
+                    $folderPair->writeFile();
                 }
             }
             writeln("total number of images: $imageCount");
@@ -141,11 +144,9 @@
             file_put_contents(ALLPAIRS_ALLOC_FILENAME, implode(PHP_EOL, $allPairs));
             
             writeln("");
-            writeln("initialization complete: all image pairs have been listed, and the list shuffled for the first round.");
+            writeln("initialization complete: all image pairs have been listed, and the list shuffled for the first round. No pairs have been allocated.");
             writeln("press F5 to continue.");
-            exit(); // this prevents Mutex.unlock in try/finally from executing but that is okay. it just leaves some debris *.lock files, no harm.
-
-            // at this point all image pairs are listed in a random order and none have been allocated.
+            return array(null, new HaltException());
         }
 
     // prepareNextPass() shuffles the file "all-pairs.txt" and increments "current-pass.txt".

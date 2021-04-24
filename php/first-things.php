@@ -1,6 +1,7 @@
 <?php 
     declare(strict_types=1);
     error_reporting(E_ALL);
+    require_once("classes/exceptions.php");
     
     define("IMAGE_DATA_DIR", 'image-data/');
     define("CONFIG_DIR", "config/");

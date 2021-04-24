@@ -13,8 +13,15 @@
         header("Location: please-wait.php?vid=$vid&q=$pair->q()");
         exit();
     }
-    if ($err != null) {
+    if ($err instanceof HaltException) {
+        exit();
+    }
+    if ($err instanceof VidFinishedException) {
         header("Location: no-more-questions.php?vid=$vid&q=$pair->q()");
+        exit();
+    }
+    if ($err != nul) {
+        writeln("halting on unexpected error");
         exit();
     }
     if ($pair->q() != $q) { // actual pair does not match requested pair
