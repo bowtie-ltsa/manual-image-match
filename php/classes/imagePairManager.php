@@ -2,6 +2,7 @@
     declare(strict_types=1);
     require_once "first-things.php";
 
+    require_once("classes/folderPair.php");
     require_once "classes/imagePair.php";
     require_once "classes/mutex.php";
     require_once "fileOrEmpty.php";
@@ -75,7 +76,7 @@
             $imageCount = 0;
             $pairCount = 0;
             $allPairs = array();
-            $header = "pairid|image1id|image2id|image1|image2|vidlist";
+            $header = "pairid|folder1id|folder2id|image1id|image2id|image1|image2|vidlist";
             for ($i = 0; $i < $dirCount; $i++) {
                 $leftImages = glob($allDirs[$i]."*");
                 $leftImageCount = count($leftImages);
@@ -89,12 +90,17 @@
 
                     $I = $i+1; $J = $j+1;
                     writeln("F$I-F$J: ${leftImageCount}x$rightImageCount $allDirs[$i] --- $allDirs[$j]:");
+                    $folderPair = new FolderPair(
+                        new ImageFolder($i, $allDirs[$i], $leftImageCount),
+                        new ImageFolder($j, $allDirs[$j], $rightImageCount)
+                    );
+                    $folderPair->writeFile();
                     for ($x = 0; $x < $leftImageCount; $x++) {
                         for ($y = 0; $y < $rightImageCount; $y++) {
                             $X = $x+1; $Y = $y+1;
                             writeln("--- F${I}C$X-F${J}C$Y: $leftImages[$x] --- $rightImages[$y]");
                             $pairCount++;
-                            $allPairs[] = sprintf("$pairCount|F${I}C$X|F${J}C$Y|$leftImages[$x]|$rightImages[$y]|");
+                            $allPairs[] = sprintf("$pairCount|F${I}|F${J}|F${I}C$X|F${J}C$Y|$leftImages[$x]|$rightImages[$y]|");
                         }
                     }
                 }
