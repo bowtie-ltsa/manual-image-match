@@ -6,7 +6,7 @@
 
     require_once "classes/imagePairManager.php";
     $pm = new ImagePairManager();
-    $q = intval($_GET["q"]); // if not present; we will take the user to an unanswered image pair
+    $q = isset($_GET["q"]) ? intval($_GET["q"]) : null; // if not present; we will take the user to an unanswered image pair
     $ok = true;
     list($pair, $err) = $pm->getImagePair($vid, $q);
     if ($err instanceof BusyException) {

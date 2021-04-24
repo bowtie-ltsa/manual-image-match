@@ -1,21 +1,33 @@
 <?php 
     declare(strict_types=1);
+    error_reporting(E_ALL);
     
-    define("CONFIG", "config/");
-    define("ACCOUNTS", "accounts.csv");
+    define("IMAGE_DATA_DIR", 'image-data/');
+    define("CONFIG_DIR", "config/");
+
+    define("ACCOUNTS_FILENAME", CONFIG_DIR . "accounts.csv");
+    define("IMAGEPAIR_REJECT_PATTERN_FILENAME", CONFIG_DIR . "image-pair-reject-pattern.txt");
+
     define("LOCKTIME", 3000);
+
+    function define_DATADIR() {
+        $datadirFile = sprintf("%sdatadir-%s.txt", CONFIG_DIR, explode(":", $_SERVER['HTTP_HOST'])[0]);
+        $datadir = file_get_contents($datadirFile);
+        define("DATADIR", $datadir);
+    }
+    define_DATADIR();
+    define("ALLPAIRS_FILENAME", CONFIG_DIR . 'all-pairs-allocations.txt');
 
     function debug(...$args) {
         foreach($args as $arg) { echo $arg . " "; }
         echo "<br />\n";
     }
 
-    function define_DATADIR() {
-        $datadirFile = sprintf("%sdatadir-%s.txt", CONFIG, explode(":", $_SERVER['HTTP_HOST'])[0]);
-        $datadir = file_get_contents($datadirFile);
-        define("DATADIR", $datadir);
+    function pre_dump($args) {
+        echo "<pre>";
+        var_dump($args);
+        echo "</pre>";
     }
-    define_DATADIR();
 
     function readCsv(string $filename): array {
         $rows   = array_map('str_getcsv', file($filename)); // consider fgetcsv() loop instead to process newlines in values, and to save memory

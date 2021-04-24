@@ -8,7 +8,7 @@
         exit();
     }
 
-    $accounts = readAccounts(CONFIG.ACCOUNTS);
+    $accounts = readAccounts(ACCOUNTS_FILENAME);
     $account = $accounts[$vid];
     if (isset($account) === false) {
         header('Location: index.php?problem=id-not-found');

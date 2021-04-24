@@ -7,9 +7,6 @@
     require_once "fileOrEmpty.php";
     class ImagePairManager {
 
-        public const IMAGE_DATA_DIR = 'image-data/';
-
-
         // getImagePair() returns the requested image pair $q, if possible, or an alternate pair if possible, or null if there are problems.
         public function getImagePair(string $vid, ?int $q): array { // ImagePair, Exception
             $mu = new Mutex("$vid-pairs");
@@ -40,13 +37,13 @@
         // or if the volunteer has not yet recorded an answer for their current allocated image pair. (That is, a volunteer is only ever
         // allocated at most one unanswered image pair, and there are only ever, at most, len(accounts.txt) unanswered image pairs.)
         private function allocatePair(string $vid): ImagePair {
-            $mu = new Mutex("all-pairs");
+            $mu = new Mutex("all-pairs-allocations");
             if (!$mu->lock()) {
                 return null;
             }
             try {
-                $allPairs = fileOrEmpty("all-pairs.txt");
-                if (count($allPairs)==0) {
+                $allPairs = fileOrEmpty(ALLPAIRS_FILENAME);
+                if (count($allPairs) == 0) {
                     $allPairs = $this->createAllPairs();
                 }
                 die("implement allocatePair next step");
@@ -66,25 +63,34 @@
 
         // createAllPairs() creates a random list of all pairs of images, unallocated to any volunteers.
         private function createAllPairs(): array {
-            $imageFiles = scandir(ImagePairManager::IMAGE_DATA_DIR); // index 0 and 1 are . and ..
+            if (file_exists(ALLPAIRS_FILENAME)) {
+                die("error: allpairs already exists");
+            }
+
+            // create all-pairs array in memory, and shuffle it.
+            $imagePairRejectPattern = @file_get_contents(IMAGEPAIR_REJECT_PATTERN_FILENAME);
+            if ($imagePairRejectPattern === false) {
+                die("error: " . IMAGEPAIR_REJECT_PATTERN_FILENAME . " not found");
+            }
+
+            $imageFiles = scandir(IMAGE_DATA_DIR); // index 0 and 1 are . and ..
             $allPairs = array();
-            $allPairs[] = "image1,image2,vids";
-            //var_dump($imageFiles);
-            foreach($imageFiles as $image1) {
+            $imageCount = count($imageFiles);
+            for ($i = 0; $i < $imageCount; $i++) {
+                $image1 = &$imageFiles[$i];
                 if ($image1 == "." || $image1 == "..") { continue; }
-                foreach($imageFiles as $image2) {
+                for ($j = $i + 1; $j < $imageCount; $j++) {
+                    $image2 = &$imageFiles[$j];
                     if ($image2 == "." || $image2 == "..") { continue; }
                     if ($image1 == $image2) { continue; }
-                    // todo: skip image2 if from same day as image1, using regex
-                    $allPairs[] = sprintf("\"%s\",\"%s\",\"\"", $image1, $image2);
+                    $allocationLine = sprintf("\"%s\",\"%s\",\"\"", $image1, $image2);
+                    if (preg_match($imagePairRejectPattern, $allocationLine)) { continue; }
+                    $allPairs[] = $allocationLine;
                 }
             }
-            echo "<pre>";
-            var_dump($allPairs);
-            echo "</pre>";
-            die("implement create all pairs");
-            // if the file "all-pairs.txt" exists then panic.
-            // create all-pairs array in memory, and shuffle it.
+            //shuffle($allPairs);
+            pre_dump($allPairs);
+            die("shuffle");
             // write array to "all-pairs.txt".
             // write "0" to "current-pass.txt".
             // at this point all image pairs are listed in a random order and none have been allocated.
