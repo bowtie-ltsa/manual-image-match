@@ -8,7 +8,7 @@
         private $h;
         
         public function __construct(string $name) { 
-            $this->name = DATADIR . $name . ".lock";
+            $this->name = DATA_DIR . $name . ".lock";
             $this->h = null;
         }
 

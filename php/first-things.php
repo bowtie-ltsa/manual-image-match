@@ -5,20 +5,25 @@
     define("IMAGE_DATA_DIR", 'image-data/');
     define("CONFIG_DIR", "config/");
 
-    define("ACCOUNTS_FILENAME", CONFIG_DIR . "accounts.csv");
-    define("IMAGEPAIR_REJECT_PATTERN_FILENAME", CONFIG_DIR . "image-pair-reject-pattern.txt");
-
-    define("LOCKTIME", 3000);
-
-    function define_DATADIR() {
+    function define_DATA_DIR() {
         $datadirFile = sprintf("%sdatadir-%s.txt", CONFIG_DIR, explode(":", $_SERVER['HTTP_HOST'])[0]);
         $datadir = file_get_contents($datadirFile);
-        define("DATADIR", $datadir);
+        define("DATA_DIR", $datadir);
     }
-    define_DATADIR();
-    define("ALLPAIRS_FILENAME", CONFIG_DIR . 'all-pairs-allocations.txt');
+    define_DATA_DIR();
+
+    define("ACCOUNTS_FILENAME", CONFIG_DIR . "accounts.csv");
+    define("LOCKTIME", 3000);
+    define("ALLPAIRS_LIST_FILENAME", DATA_DIR . 'all-pairs-list.psv');
+    define("ALLPAIRS_ALLOC_FILENAME", DATA_DIR . 'all-pairs-allocations.psv');
+    define("ROUND_FILENAME", DATA_DIR . 'round.txt');
 
     function debug(...$args) {
+        foreach($args as $arg) { echo $arg . " "; }
+        echo "<br />\n";
+    }
+
+    function writeln(...$args) {
         foreach($args as $arg) { echo $arg . " "; }
         echo "<br />\n";
     }

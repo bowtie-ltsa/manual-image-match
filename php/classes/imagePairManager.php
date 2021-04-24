@@ -18,7 +18,7 @@
                 $maxq = count($vidPairs) - 1;
                 if ($q <= 0 || $q > $maxq) { $q = $maxq; }
                 if ($q > 0) {
-                    debug("q=$q exists - implement");
+                    die("q=$q exists - implement");
                     exit();
                 }
 
@@ -42,7 +42,7 @@
                 return null;
             }
             try {
-                $allPairs = fileOrEmpty(ALLPAIRS_FILENAME);
+                $allPairs = fileOrEmpty(ALLPAIRS_ALLOC_FILENAME);
                 if (count($allPairs) == 0) {
                     $allPairs = $this->createAllPairs();
                 }
@@ -63,36 +63,67 @@
 
         // createAllPairs() creates a random list of all pairs of images, unallocated to any volunteers.
         private function createAllPairs(): array {
-            if (file_exists(ALLPAIRS_FILENAME)) {
-                die("error: allpairs already exists");
+            if (file_exists(ALLPAIRS_ALLOC_FILENAME)) {
+                die("panic: allpairs already exists");
             }
 
-            // create all-pairs array in memory, and shuffle it.
-            $imagePairRejectPattern = @file_get_contents(IMAGEPAIR_REJECT_PATTERN_FILENAME);
-            if ($imagePairRejectPattern === false) {
-                die("error: " . IMAGEPAIR_REJECT_PATTERN_FILENAME . " not found");
-            }
-
-            $imageFiles = scandir(IMAGE_DATA_DIR); // index 0 and 1 are . and ..
+            // create list of all pairs of images; do not compare any image to another image from the same folder
+            writeln("Generating image pairs:");
+            $allDirs = glob(IMAGE_DATA_DIR . "*", GLOB_MARK+GLOB_ONLYDIR);
+            $dirCount = count($allDirs);
+            if ($dirCount == 0) { die("panic: no image folders found in image-data-dir"); }
+            $imageCount = 0;
+            $pairCount = 0;
             $allPairs = array();
-            $imageCount = count($imageFiles);
-            for ($i = 0; $i < $imageCount; $i++) {
-                $image1 = &$imageFiles[$i];
-                if ($image1 == "." || $image1 == "..") { continue; }
-                for ($j = $i + 1; $j < $imageCount; $j++) {
-                    $image2 = &$imageFiles[$j];
-                    if ($image2 == "." || $image2 == "..") { continue; }
-                    if ($image1 == $image2) { continue; }
-                    $allocationLine = sprintf("\"%s\",\"%s\",\"\"", $image1, $image2);
-                    if (preg_match($imagePairRejectPattern, $allocationLine)) { continue; }
-                    $allPairs[] = $allocationLine;
+            $header = "pairid|image1id|image2id|image1|image2|vidlist";
+            for ($i = 0; $i < $dirCount; $i++) {
+                $leftImages = glob($allDirs[$i]."*");
+                $leftImageCount = count($leftImages);
+                if ($leftImageCount == 0 ) { die("panic: folder $allDirs[$i] contains no images"); }
+                $imageCount += $leftImageCount;
+
+                for ($j = $i+1; $j < $dirCount; $j++) {
+                    $rightImages = glob($allDirs[$j]."*");
+                    $rightImageCount = count($rightImages);
+                    if ($rightImageCount == 0) { die("panic: folder $allDirs[$j] contains no images"); }
+
+                    $I = $i+1; $J = $j+1;
+                    writeln("F$I-F$J: ${leftImageCount}x$rightImageCount $allDirs[$i] --- $allDirs[$j]:");
+                    for ($x = 0; $x < $leftImageCount; $x++) {
+                        for ($y = 0; $y < $rightImageCount; $y++) {
+                            $X = $x+1; $Y = $y+1;
+                            writeln("--- F${I}C$X-F${J}C$Y: $leftImages[$x] --- $rightImages[$y]");
+                            $pairCount++;
+                            $allPairs[] = sprintf("$pairCount|F${I}C$X|F${J}C$Y|$leftImages[$x]|$rightImages[$y]|");
+                        }
+                    }
                 }
             }
-            //shuffle($allPairs);
-            pre_dump($allPairs);
-            die("shuffle");
-            // write array to "all-pairs.txt".
-            // write "0" to "current-pass.txt".
+            writeln("total number of images: $imageCount");
+            writeln("total number of image pairs: $pairCount");
+            unset($allDirs); unset($leftImages); unset($rightImages);
+            array_unshift($allPairs, $header);
+            file_put_contents(ALLPAIRS_LIST_FILENAME, implode(PHP_EOL, $allPairs));
+            array_splice($allPairs, 0, 1);
+
+            // prepare for the first round: set round#
+            file_put_contents(ROUND_FILENAME, "0");
+
+            // prepare for the first round: shuffle the list
+            shuffle($allPairs);
+            writeln("");
+            writeln("shuffled list of image pairs for the first round:");
+            for ($n = 0; $n < $pairCount; $n++) {
+                writeln($allPairs[$n]);
+            }
+            array_unshift($allPairs, $header);
+            file_put_contents(ALLPAIRS_ALLOC_FILENAME, implode(PHP_EOL, $allPairs));
+            
+            writeln("");
+            writeln("initialization complete: all image pairs have been listed, and the list shuffled for the first round.");
+            writeln("press F5 to continue.");
+            exit(); // this prevents Mutex.unlock in try/finally from executing but that is okay. it just leaves some debris *.lock files, no harm.
+
             // at this point all image pairs are listed in a random order and none have been allocated.
         }
 
