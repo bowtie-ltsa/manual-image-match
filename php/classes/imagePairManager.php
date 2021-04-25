@@ -15,15 +15,15 @@
                 return array(null, new BusyException());
             }
             try {
-                $vidPairs = fileOrEmpty("$vid-pairs.csv");
+                $vidPairs = fileOrEmpty("$vid-pairs.csv"); // contains a list of allocated image pairs and their results: folder1id, folder2id, 
                 $maxq = count($vidPairs) - 1;
                 if ($q <= 0 || $q > $maxq) { $q = $maxq; }
                 if ($q > 0) {
-                    die("q=$q exists - implement");
-                    exit();
+                    debug("q=$q exists - implement");
+                    return array(null, new HaltException()); //temp
                 }
 
-                list($pair, $err) = $this->allocatePair($vid);
+                list($pair, $err) = $this->allocateImagePair($vid);
                 if ($err) {
                     return array(null, $err);
                 }
@@ -34,15 +34,75 @@
             }
         }
 
-        // AllocatePair() allocates an image pair to a volunteer; it returns null if the volunteer has already matched all image pairs,
-        // or if the volunteer has not yet recorded an answer for their current allocated image pair. (That is, a volunteer is only ever
-        // allocated at most one unanswered image pair, and there are only ever, at most, len(accounts.txt) unanswered image pairs.)
+        // AllocateImagePair() allocates a new image pair to the given volunteer
+        private function allocateImagePair(string $vid): array { // ImagePair, Exception
+            $mu = new Mutex("image-pair-allocation");
+            if (!$mu->lock()) {
+                return array(null, new BusyException());
+            }
+            try {
+                $fpm = new FolderPairManager();
+                list($fp, $err) = $fpm->currentFolderPairForVid($vid);
+                if ($err != null) {
+                    return array(null, $err);
+                }
+
+                list($ip, $err) = $fp->nextImagePairForVid($vid);
+                if ($ip != null || !($err instanceof ImageNotAvailable)) {
+                    return array($ip, $err);
+                }
+
+                list($fp, $err) = $fpm->nextFolderPairForVid($vid);
+                if ($fp != null || !($err instanceof FolderNotAvailable)) {
+                    list($ip, $err) = $fp->nextImagePairForVid($vid);
+                    if ($err != null) {
+                        writeln("panic: next image pair should be available after getting next folder pair");
+                        return array(null, HaltException());
+                    }
+                    return array($ip, null);
+                }
+
+                // FolderNotAvailable implies all image pairs have been answered in this round; time for a new round
+                // this round will have an available image pair, unless the study itself has finished (all image-pairs answered by all volunteers).
+                nextRound()
+
+                list($fp, $err) = $fpm->currentFolderPairForVid($vid);
+                if ($err != nil) {
+                    return array(null, $err);
+                }
+
+                list($ip, $err) = $fp->nextImagePairForVid($vid);
+                if ($err != null) {
+                    writeln("panic: next image pair should be available after going to next round");
+                    return array(null, HaltException());
+                }
+                return array($ip, null);
+            }
+            finally {
+                $mu->unlock();
+            }
+        }
+
+        // AllocatePair() allocates an image pair to a volunteer; it returns (null,exception) if the volunteer has already matched 
+        // all image pairs. It is a programming bug to call this function when the volunteer already has an allocated image pair and
+        // has not provided an answer for it. (That is, a volunteer is only ever allocated at most one unanswered image pair, and 
+        // there are only ever, at most, len(accounts.csv) unanswered image pairs.)
         private function allocatePair(string $vid): array { // ImagePair, Exception
             $mu = new Mutex("all-pairs-allocations");
             if (!$mu->lock()) {
                 return array(null, new BusyException());
             }
             try {
+                $allFolderPairs = fileOrEmpty(ALL_FOLDER_PAIRS_FILENAME);
+                if (count($allFolderPairs) == 0) {
+                    $this->createAllFolderPairs();
+                    return array(null, new HaltException());
+                }
+                $allFolderPairsCount = count($allFolderPairs);
+
+
+
+
                 $allPairs = fileOrEmpty(ALLPAIRS_ALLOC_FILENAME);
                 if (count($allPairs) == 0) {
                     $this->createAllPairs();
@@ -107,7 +167,7 @@
 
                     $I = $i+1; $J = $j+1;
                     writeln("F$I-F$J: ${leftImageCount}x$rightImageCount $allDirs[$i] --- $allDirs[$j]:");
-                    $folderPair = new FolderPair(
+                    $folderPair = new FolderPairInfo(
                         new ImageFolder($i, $allDirs[$i], $leftImageCount),
                         new ImageFolder($j, $allDirs[$j], $rightImageCount)
                     );
