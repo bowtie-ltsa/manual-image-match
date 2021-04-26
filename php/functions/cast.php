@@ -2,11 +2,11 @@
     /**
      * Class casting. thx to https://stackoverflow.com/a/9812059/1238406
      *
-     * @param string|object $destination
      * @param object $sourceObject
+     * @param string|object $destination
      * @return object
      */
-    function cast($destination, $sourceObject)
+    function cast($sourceObject, $destination)
     {
         if (is_string($destination)) {
             $destination = new $destination();
@@ -27,5 +27,16 @@
             }
         }
         return $destination;
+    }
+
+    function casteach($sourceList, $destination) {
+        if (!is_string($destination)) {
+            $destination = get_class($destination);
+        }
+        $out = array();
+        foreach($sourceList as $key => $value) {
+            $out[$key] = cast($value, $destination);
+        }
+        return $out;
     }
 ?>

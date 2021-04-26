@@ -56,12 +56,14 @@ ImagePairManager
     - Among those with the least # allocations, ImagePairs with fewer answers are prioritized over those with more answers.
 
 ImagePairAllocation
-- ImagePairAllocationId (zero-based)
+- ipaId (zero-based)
 - imagePairId (id of ImagePair)
+- k (round)
 - vid (volunteer id)
+- q (question id/position - position in volunteer's question array)
 - isMatch (0 for no, 1 for yes, null for not yet answered)
 
-AllocationManager
+IpaManager
 - allocations (an array of ImagePairAllocation objects, indexed by allocationId)
 
 RoundManager

@@ -20,6 +20,7 @@
 
     define("ACCOUNTS_FILENAME", CONFIG_DIR . "accounts.csv");
     define("LOCKTIME", 3000);
+    define("JSON_FMT", JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
     define("ALLPAIRS_LIST_FILENAME", DATA_DIR . 'all-pairs-list.psv');
     define("ALLPAIRS_ALLOC_FILENAME", DATA_DIR . 'all-pairs-allocations.psv');
     define("CURRENT_ROUND_FILENAME", DATA_DIR . 'current-round.txt');
@@ -50,7 +51,6 @@
         return $csv;
     }
 
-    require_once "classes/account.php";
     function readAccounts(string $filename): array {
         $accounts = array();
         $list = readCsv($filename);

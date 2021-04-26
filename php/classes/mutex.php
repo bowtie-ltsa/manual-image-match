@@ -12,7 +12,7 @@
             $this->h = null;
         }
 
-        public function lock(int $timeoutMilliseconds = LOCKTIME): bool {
+        public function Lock(int $timeoutMilliseconds = LOCKTIME): bool {
             if ($this->h) { throw new Exception("already locked"); }
             $this->h = fopen($this->name, 'w');
             if (!$this->h) return false;
@@ -29,7 +29,7 @@
             return false;
         }
 
-        public function unlock() {
+        public function Unlock() {
             if (!$this->h) { throw new Exception("not locked"); }
             unlink($this->name);
             flock($this->h, LOCK_UN);
