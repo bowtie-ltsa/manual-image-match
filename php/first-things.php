@@ -1,6 +1,11 @@
 <?php 
     declare(strict_types=1);
     error_reporting(E_ALL);
+
+    spl_autoload_register(function($className) {
+        require_once("classes/${className}.php");
+    });
+
     require_once("classes/exceptions.php");
     
     define("IMAGE_DATA_DIR", 'image-data/');

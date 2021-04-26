@@ -4,10 +4,14 @@
     require_once "get-volunteer.php";
 
 
-    require_once "classes/imagePairManager.php";
-    $pm = new ImagePairManager();
     $q = isset($_GET["q"]) ? intval($_GET["q"]) : null; // if not present; we will take the user to an unanswered image pair
-    $ok = true;
+    $v = Volunteer::Load($vid);
+    //$v->questions = array(1,2,3,4);
+    //$v->Save();
+    pre_dump($v);
+
+    die("quitting here");
+    
     list($pair, $err) = $pm->getImagePair($vid, $q);
     if ($err instanceof BusyException) {
         header("Location: please-wait.php?vid=$vid&q=$pair->q()");
