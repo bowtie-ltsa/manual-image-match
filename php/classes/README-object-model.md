@@ -37,8 +37,10 @@ ImagePair
 - i1 (id of image 1 "FnCx")
 - i2 (id of image 2 "FmCy")
 - answers (an array of AnswerIds) (the # answers for almost all image pairs is <= k, where `k` is the current round; the # answers for a few image pairs _can_ end up being greater than `k`, due to having volunteers "swarm" on the last few image pairs toward the end of each round, to ensure the round finishes.)
+- answerCount (int)
 - allocations (an array of ImagePairAllocationIds) (the # answers is always <= # allocations)
   - ImagePairs are allocated to volunteers as needed but not before
+- allocationCount (int)
 
 ImagePairManager
 - imagePairs (array of ImagePair objects, indexed by imagePairId)
@@ -59,6 +61,7 @@ ImagePairAllocation
 - ipaId (zero-based)
 - imagePairId (id of ImagePair)
 - k (round)
+- chitId (id of chit for the given round)
 - vid (volunteer id)
 - q (question id/position - position in volunteer's question array)
 - isMatch (0 for no, 1 for yes, null for not yet answered)
@@ -66,9 +69,35 @@ ImagePairAllocation
 IpaManager
 - allocations (an array of ImagePairAllocation objects, indexed by allocationId)
 
+Round
+- k (the current round, starting at round 1; if k is zero then initialize the project via first call to NextRound()) 
+- stubs (an array of imagePairIds, in a random order, indexed by position for that image pair in the current round) (created at start of round)
+- stubCount (int) # image pairs in this round (can be less than #imagepairs due to swarming in previous round; imagepairs with extra answers [#answers >= k, the new round] are omitted from the new round)
+- allChits (list of chitIds) (each chit tracks a vidlist of volunteers (generally only one volunteer) assigned to answering a given stub (image pair) in the current round) (grows during round) (when a round starts this list is might not be empty; it will contain new chits that are copies of previous round active chits, recording the fact that volunteers are already assigned to those image pairs; chits from previous round are not copied if the imagepair is being omitted from the stubs list, i.e. if #answers is already >= k, new round k)
+- allChitsCount (int) # of chits created so far (for the current round) (always <= stubCount)
+- IsSwarming() true if allChitsCount >= stubCount; when true there is no point in looking through the stubs for an avaiable imagepair; it is time to swarm on the few remaining imagepairs. Instead, we looking through the activeChits to find one with the fewest volunteers assigned.
+- vidChitMap (map from vid to chitId tracking the current chit for a given volunteer; the volunteer was most recently assigned to this chit)
+- activeChits (list of chitIds) (a list of chits referring to imagepairs that are waiting to be answered `k` times or more)
+- activeChitsCount (int) # of chits referring to imagepairs that are waiting to be answered `k` times or more (for the current round)
+- stubsLeft (int) # stubs not yet answered this round (stubsLeft is decremented when the first volunteer in a vidlist answers a chit; if any further volunteers answer the same chit, the stubcount is not decremented) (round is over when stubsLeft reaches zero; there will probably be a few activeChits when the round ends; these are copied into the new round since volunteers may still answer them, if re-allocation doesn't happen first.)
+- ::Load(k)
+- Save()
+
+Stub - just use Chit with empty vidlist? or
+- stubId
+- imagePairId
+
+Chit
+- chitId (int, zero based)
+- k (round to which the chit applies)
+- stubIndex (the index into the stubs for the round; useful for getting next imagepair for a given volunteer)
+- vidlist (list of vids assigned to answer the imagepair in this round)
+- imagePairId (id of image being assigned to one or more volunteeers)
+- ipaId (id of image pair allocation)
+
+
 RoundManager
 - k (the current round, starting at round 1; if k is zero then initialize the project via first call to NextRound()) 
-- ImagePairs (an array of imagePairIds, in a random order, indexed by position for that image pair in the current round)
 - Load()
 - Save()
 - NextRound() starts a new round; when starting the first round, the project is initialized (image folders scanned, image pairs created, etc)

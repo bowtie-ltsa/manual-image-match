@@ -8,7 +8,7 @@
         public $questions; //an array of ImagePairAllocationId values; array is zero-based but q parameter is 1-based
 
         // returns an ImagePairAllocation object for the requested question # `q`, if possible.
-        // q is 1-based, so `q-1` is the index we want.
+        // q is 1-based, so `q-1` is the index into the $questions array that we want.
         // if q refers to a past question (already answered), then we just use that without any thought (easy).
         // if q refers to the volunteer's last question (aka current question), or q is null or beyond the array, then we 
         // want to provide a question that the volunteer has not yet answered, and which has been answered fewer than `k` 
@@ -16,9 +16,9 @@
         // it might not be: the array could be empty (there is no current question), or the volunteer's current question 
         // might have already been answered `k` times (by other volunteers). (The latter situation can only happen if multiple 
         // volunteers are "swarming" on an image pair, near the end of a round; in this situation, since the volunteer is 
-        // _asking_ us for their current question, we may change their current question to different one. This is the only 
-        // situation where we will change their current question; normally they must answer the question once the image pair
-        // has been allocated.)
+        // _asking_ us for their current question, we may change their current question to a different one. This is the only 
+        // situation where we will change their current question; normally they must answer the current question before moving on
+        // to the next question; normally, once an image pair has been allocated, it stays allocated.)
         public function GetImagePairAllocation(?int $q): IpaResult {
             $count = count($this->questions);
             if ($q != null && $q > 0 and $q < $count) {
@@ -27,13 +27,23 @@
                 return $result;
             }
 
-            if ($q === $count) {
+            if ($q > 0 && $q === $count) {
                 // todo: check if question has already been answered `k` times
                 return new IpaResult(null, new Exception("todo: check if question has already been answered `k` times."));
+                // if questionActiveThisRound() then return that question (early exit)
+                // otherwise: possibly un-allocate (needed?), and drop through to logic below 
             }
+
+            $result = $this->GetNewIPA();
+            return $result;
             
             // todo: request new allocation (possibly causing a new round to start)
             return new IpaResult(null, new Exception("todo: request new allocation, possibly causing a new round to start"));
+        }
+
+        private function GetNewIPA(): IpaResult {
+            $round = RoundManager::LoadCurrentRound();
+            $vrstatus = 
         }
 
         public function Save() {
