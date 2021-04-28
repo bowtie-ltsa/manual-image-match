@@ -3,10 +3,19 @@
     error_reporting(E_ALL);
 
     spl_autoload_register(function($className) {
-        require_once("classes/${className}.php");
+        try {
+            $filename = "classes/${className}.php";
+            if (!file_exists($filename)) { throw new Exception("file not found: $filename"); }
+            require_once $filename;
+        }
+        catch (Exception $ex) {
+            echo "<pre>" . stackTrace($ex) . "</pre>";
+            throw $ex;
+        }
     });
 
     require_once("classes/exceptions.php");
+    require_once("functions/stackTrace.php");
     
     define("IMAGE_DATA_DIR", 'image-data/');
     define("CONFIG_DIR", "config/");

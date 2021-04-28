@@ -5,8 +5,8 @@
 
 
     $q = isset($_GET["q"]) ? intval($_GET["q"]) : null; // if not present; we will take the user to an unanswered image pair
-    $v = Volunteer::Load($vid);
-    list($ipa, $err) = $v->getImagePairAllocation($q)->Result();
+    $ipm = new ImagePairManager();
+    list($ipa, $err) = $ipm->getImagePair($vid, $q)->Result();
     if ($err instanceof BusyException) {
         header("Location: please-wait.php?vid=$vid&q=$ipa->q()");
         exit();
