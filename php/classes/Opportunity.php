@@ -6,6 +6,14 @@
     // An opportunity becomes a decision when the $decision property is set.
     // We might have public class Decision extends Opportunity and do some casting and checking, perhaps.
     class Opportunity {
+        public static function FromLine(string $line) {
+            $opportunity = new Opportunity();
+            foreach(OppList:Array($line) as $key => $value) {
+                $opportunity->{$key} = $value;
+            }
+            return $opportunity;
+        }
+
         // the id of the image pair, in the format FnCx-FmCy, with n<m
         public $ipid;
 

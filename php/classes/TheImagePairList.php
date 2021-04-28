@@ -56,7 +56,7 @@
             $imageCount = 0;
             $pairCount = 0;
             $allPairs = array();
-            $header = "ipid|path1|path2|vidlist|decision";
+            $header = OppList::HEADERS;
             for ($i = 0; $i < $dirCount; $i++) {
                 $leftImages = glob($allDirs[$i]."*");
                 $leftImageCount = count($leftImages);

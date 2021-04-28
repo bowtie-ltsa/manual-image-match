@@ -29,6 +29,7 @@
 
     define("ACCOUNTS_FILENAME", CONFIG_DIR . "accounts.csv");
     define("LOCKTIME", 3000);
+    define("PIPE", "|");
     define("JSON_FMT", JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
 
     function debug(...$args) {

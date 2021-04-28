@@ -4,6 +4,9 @@
     // for at least, we keep the static classes static, but try to keep the code DRY.
     // eventually we may take the time to create a generic, nonstatic OpportunityList....
     class OppList {
+        public const HEADERS = "ipid|path1|path2|vidlist|decision";
+
+        public static function HeadersArray() { return explode(PIPE, self::HEADERS); }
 
         public static function IsEmpty($filepath): bool {
             if (!file_exists($filepath)) {
