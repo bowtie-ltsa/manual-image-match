@@ -22,10 +22,12 @@
         }
 
         private static function getOpportunityEx(string $vid, ?int $did, ?string $ipid): OpportunityResult {
-            TheImagePairList::CreateIfNecessary();
+            if (TheImagePairList::It()->IsEmpty()) {
+                TheImagePairList::It()->CreateOnce();
+            }
 
-            if (TheOpportunityList::IsEmpty() && TheOpportunityBoard::IsEmpty()) {
-                TheOpportunityList::Create();
+            if (TheOpportunityList::It()->IsEmpty() && TheOpportunityBoard::It()->IsEmpty()) {
+                TheOpportunityList::It()->StartNewRound();
             }
 
             // if a decision was requested, and exists, return that
@@ -40,27 +42,28 @@
             }
 
             // if the volunteer already has an opportunity on the opportunity board, return that
-            $opportunity = TheOpportunityBoard::GetExistingOpportunity($vid);
+            $opportunity = TheOpportunityBoard::It()->GetExistingOpportunity($vid);
             if ($opportunity != null) {
                 return new OpportunityResult($opportunity, null);
             }
+            return new OpportunityResult(null, new Exception("got to here"));
 
             // if the volunteer already has an opportunity on his or her bucket board, return that
-            $opportunity = BucketBoard::GetExistingOpportunity($vid);
+            $opportunity = BucketBoard::It()->GetExistingOpportunity($vid);
             if ($opportunity != null) {
                 return new OpportunityResult($opportunity, null);
             }
 
             // pull an opportunity for the volunteer out of the hat, if possible.
             // the hat (the opportunity list) may be empty; or it might reference only image pairs aleady decided by the volunteer.
-            $opportunity = TheOpportunityList::GetNewOpportunity($vid, $ipid);
+            $opportunity = TheOpportunityList::It()->GetNewOpportunity($vid, $ipid);
             if ($opportunity != null) {
                 return new OpportunityResult($opportunity, null);
             }
 
             // if the opportunity board has an opportunity that the volunteer can join in on (swarming), return that.
             // (volunteer cannot swarm on an opportunity if he or she has already made a decision for that image pair.)
-            $opportunity = TheOpportunityBoard::GetNewOpportunity($vid, $ipid);
+            $opportunity = TheOpportunityBoard::It()->GetNewOpportunity($vid, $ipid);
             if ($opportunity != null) {
                 return new OpportunityResult($opportunity, null);
             }

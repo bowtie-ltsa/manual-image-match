@@ -2,53 +2,24 @@
     declare(strict_types=1);
 
     // the one and only list of image pairs for the study. Each image pair is represented as an Opportunity not assigned and undecided.
-    class TheImagePairList {
+    class TheImagePairList extends OppList {
         public const FILENAME = "the-image-pair-list.psv";
         public const FILEPATH = DATA_DIR . self::FILENAME;
 
-        public static function GetAll(): array {
-            if (!file_exists(self::FILEPATH)) {
-                throw new Exception("panic: TheImagePairList does not exist yet.");
-            }
-            return file(self::FILEPATH, FILE_IGNORE_NEW_LINES);
+        // return the one and only ImagePairList
+        public static function It(): TheImagePairList {
+            $ipList = new TheImagePairList();
+            self::ForFile(self::FILEPATH, $ipList);
+            return $ipList;
         }
 
-        // get an individual item in the list by position (zero-based)
-        public static function ImagePairAt(int $pos): ImagePair {
-            throw new Exception("implement With Index");
-        }
-
-        // get an individual item by id
-        public static function ImagePair(string $id): ImagePair {
-            throw new Exception("implement With Id");
-        }
-
-        public static function entireList(int $i): array {
-            if (self::$list == null) {
-                self::$list = array();
-                throw new Exception("implement entireList");
-                // read file line by line, convert each line to Opportunity object
-            }
-            return $_entireList;
-        }
-        private static $_entireList; // an simple array of Opportunity objects; we may be fancier later (split into multiple files, etc)
-
-        public static function CreateIfNecessary() {
-            if (file_exists(self::FILEPATH)) { return; }
-            $mu = new Mutex(self::FILENAME);
-            if (!$mu->lock()) {
-                return array(null, new BusyException());
-            }
-            try {
-                self::create();
-            }
-            finally {
-                $mu->unlock();
-            }
+        public function GetAll(): array {
+            // for now at least, this is simple, because we keep the entire thing in memory
+            return $this->lines;
         }
 
         // creates a list of all pairs of images; we do not compare any image to another image from the same folder
-        private static function create() {
+        public function CreateOnce() {
             writeln("Generating image pairs:");
             $allDirs = glob(IMAGE_DATA_DIR . "*", GLOB_MARK+GLOB_ONLYDIR);
             $dirCount = count($allDirs);
@@ -88,6 +59,7 @@
             writeln("total number of images: $imageCount");
             writeln("total number of image pairs: $pairCount");
             unset($allDirs); unset($leftImages); unset($rightImages);
+            $this->lines = $allPairs;
             array_unshift($allPairs, $header);
             file_put_contents(self::FILEPATH, implode(PHP_EOL, $allPairs));
         }

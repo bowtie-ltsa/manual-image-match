@@ -14,8 +14,9 @@
         }
     });
 
-    require_once("classes/exceptions.php");
-    require_once("functions/stackTrace.php");
+    require_once "classes/exceptions.php";
+    require_once "functions/stackTrace.php";
+    require_once "functions/cast.php";
     
     define("IMAGE_DATA_DIR", 'image-data/');
     define("CONFIG_DIR", "config/");

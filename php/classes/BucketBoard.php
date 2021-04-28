@@ -8,23 +8,28 @@
     // So we give them one from their BucketList, and use the BucketBoard to keep track of it. This will add a decision beyond
     // the goal of the current round, but this is better than telling the volunteer to wait for the round to end (which might
     // be a while). The volunteer is essentially helping to get a head start on a future round.
-    class BucketBoard {
-        public const FILENAME_SUFFIX = "-bucket-list.psv";
-        public const FILEPATH_FMT = DATA_DIR . "%s" . self::FILENAME;
+    class BucketBoard extends OppList {
+        public const FILENAME_SUFFIX = "-bucket-board.psv";
+        public const FILEPATH_FMT = DATA_DIR . "%s" . self::FILENAME_SUFFIX;
 
-        // get an individual item in the list by position (zero-based)
-        public static function DecisionAt(int $pos): Opportunity {
-            throw new Exception("implement With Index")
+        // called at the start of a new round.
+        public static function ClearAll() {
+            foreach(glob(DATA_DIR . "*" . FILENAME_SUFFIX) as $bbFile) {
+                unlink($bbFile);
+                unset(self:$lists[$bbFile]);
+            }
         }
 
         public static function ForVolunteer(string $vid): BucketBoard {
-            throw new Exception("not implemented");
+            $filepath = sprintf(self::FILEPATH_FMT, $vid);
+            $oppList = parent::ForFile($filepath);
+            $bbList = cast($oppList, new BucketBoard());
+            return $bbList;
         }
-        public $entireList; 
 
         // returns the (one and only) opportunity from the volunteer's BucketBoard -- if any.
         // returns null if none.
-        public static function GetExistingOpportunity(string $vid): Opportunity {
+        public function GetExistingOpportunity(string $vid): Opportunity {
             throw new Exception("not implemented");
         }
 

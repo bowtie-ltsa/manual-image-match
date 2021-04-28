@@ -5,24 +5,24 @@
     // Near the end of a round, several volunteers can "swarm" on the last remaining opportunities; that is, it is possible
     // for more than one volunteer to be given the same opportunity in a given round.
     // The opportunity stays on the opportunity board until someone makes a decision; it is removed as soon as the first volunteer
-    // makes a decision. This means that (just in swarming mode) a returning volunteer get a new opportunity (might lose their 
-    // opportunity for a particular imagepair, at least for a while). If the opportunity is not being swarmed, then there is only
+    // makes a decision. This means that (just in swarming mode) a returning volunteer can get a new opportunity (might lose their 
+    // previous opportunity for an imagepair, at least for a while). If the opportunity is not being swarmed, then there is only
     // the one volunteer assigned to it, and it will stay on the board until it gets decided by that volunteer.
-    //
-    // todo: when the last item is removed from TheOpportunityBoard, and TheOpportunityList is empty, a new round is about to
-    // begin, and we should clear each volunteer's BucketBoard if present, so that a returning volunteer will contribute to the new round
-    // if possible.
-    class TheOpportunityBoard {
+    // Note: when the last item is removed from TheOpportunityBoard, and TheOpportunityList is empty, a new round is about to begin.
+    class TheOpportunityBoard extends OppList {
         public const FILENAME = "the-opportunity-board.psv";
         public const FILEPATH = DATA_DIR . self::FILENAME;
 
-        public static function IsEmpty(): bool { 
-            return OppList::IsEmpty(self::FILEPATH); 
+        // return the one and only OpportunityBoard
+        public static function It(): TheOpportunityBoard {
+            $obList = new TheOpportunityBoard();
+            self::ForFile(self::FILEPATH, $obList);
+            return $obList;
         }
 
         // returns the (one and only) opportunity from TheOpportunityBoard assigned to the volunteer -- if any.
         // returns null if none.
-        public static function GetExistingOpportunity(string $vid): Opportunity {
+        public function GetExistingOpportunity(string $vid): Opportunity {
             throw new Exception("not implemented");
         }
 
@@ -34,7 +34,7 @@
         // it may choose randomly or it may consider $ipid.
         // adds +1 to the vidlist length. 
         // does *not* remove it from the volunteer's BucketList!
-        public static function GetNewOpportunity(string $vid, ?string $ipid): Opportunity {
+        public function GetNewOpportunity(string $vid, ?string $ipid): Opportunity {
             throw new Exception("not implemented");
         }
     }

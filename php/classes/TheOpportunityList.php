@@ -14,21 +14,27 @@
     // removed from the volunteer's BucketList; they are not removed from the volunteer's BucketList until and unless the 
     // volunteer reports a decision for that opportunity. In fact, due to swarming, the volunteer might lose their opportunity
     // to make a decision, for that opportunity (until/unless it gets reassigned to them in a future round).
-    class TheOpportunityList {
+    class TheOpportunityList extends OppList {
         public const FILENAME = "the-opportunity-list.psv";
         public const FILEPATH = DATA_DIR . self::FILENAME;
 
-        public static function IsEmpty(): bool { 
-            return OppList::IsEmpty(self::FILEPATH); 
+        // return the one and only OpportunityList
+        public static function It(): TheOpportunityList {
+            $tol = new TheOpportunityList();
+            OppList::ForFile(self::FILEPATH, $tol);
+            return $tol;
         }
 
-        // create or recreate TheOpportunityList. This is how we start the first round or a new round.
-        public static function Create() {
-            $allPairs = TheImagePairList::GetAll();
-            $headers = array_shift($allPairs);
-            shuffle($allPairs);
-            array_unshift($allPairs, $headers);
-            file_put_contents(self::FILEPATH, implode(PHP_EOL, $allPairs));
+        // create or recreate TheOpportunityList. This is how we start the first round or a new round. We also clear any BucketBoards,
+        // because we want returning volunteers to get an opportunity from the new round, if possible.
+        // todo: At the start of round `k`, we could take the effort to include just those image pairs that have fewer than `k` decisions, 
+        // rather than the simple approach of merely copying and shuffling TheImagePairList.
+        public function StartNewRound() {
+            $this->lines = TheImagePairList::It()->GetAll(); // a copy of the image pair array
+            shuffle($this->lines);
+            file_put_contents(self::FILEPATH, OppList::HEADERS . PHP_EOL . implode(PHP_EOL, $this->lines));
+            
+            BucketBoard::ClearAll();
         }
 
         // returns a new opportunity for the given volunteer from the hat, 
@@ -39,7 +45,7 @@
         // adds it to TheOpportunityBoard (with vidlist length of 1)
         // does *not* remove it from the volunteer's BucketList!
         // it is an error to call this function if the volunteer already has something on TheOpportunityBoard -or- their BucketBoard
-        public static function GetNewOpportunity(string $vid, ?string $ipid): Opportunity {
+        public function GetNewOpportunity(string $vid, ?string $ipid): Opportunity {
             throw new Exception("not implemented");
         }
     }
