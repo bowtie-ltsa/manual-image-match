@@ -1,12 +1,13 @@
 <?php
     declare(strict_types=1);
     require_once "first-things.php";
-    require_once "get-volunteer.php";
 
+    // get $vid, and optional parameters $did (decision id) and $ipid (imagepair id)
+    include "get-volunteer.php";
+    $did = getIntParam("did");
+    $ipid = getStringParam("ipid");
 
-    $q = isset($_GET["q"]) ? intval($_GET["q"]) : null; // if not present; we will take the user to an unanswered image pair
-    $ipm = new ImagePairManager();
-    list($ipa, $err) = $ipm->getImagePair($vid, $q)->Result();
+    list($opp, $err) = TheCoordinator::GetOpportunity($vid, $did, $ipid)->Result();
     if ($err instanceof BusyException) {
         header("Location: please-wait.php?vid=$vid&q=$ipa->q()");
         exit();
@@ -15,26 +16,25 @@
         exit();
     }
     if ($err instanceof VidFinishedException) {
-        header("Location: no-more-questions.php?vid=$vid&q=$ipa->q()");
+        header("Location: vid-finished.php?$vid=$vid&did=$did&ipid=$ipid");
         exit();
     }
     if ($err != null) {
         writeln("halting on unexpected error:");
-        writeln($err);
+        echo preTrace($err);
         exit();
     }
-    if ($ipa->$q != $q) { // actual pair does not match requested pair
+    if ($did != $opp->$somethingsomething || $ipid != $opp->$somethingelse) { // decision requested did not exist, so redirect
         // redirect so the page is properly bookmarkable
-        $q = $ipa->$q;
-        header("Location: show-question.php?vid=$vid&q=$q");
+        header("Location: show-question.php?vid=$vid&did=something&ipid=somethingelse");
         exit();
     }
+
 ?>
-<pre>
-now we know what pair of photos to show:
-<?print_r($ipa)?>
-and q() is <?= $ipa->q() ?>.
-</pre>
+<div>
+ready to display this opportunity:
+</div>
+<?pre_dump($opp)?>
 
 hello <?=$vid?>.<br>
 <a href="/">home</a>

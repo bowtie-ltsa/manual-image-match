@@ -9,7 +9,7 @@
             require_once $filename;
         }
         catch (Exception $ex) {
-            echo "<pre>" . stackTrace($ex) . "</pre>";
+            echo preTrace($ex);
             throw $ex;
         }
     });
@@ -30,9 +30,6 @@
     define("ACCOUNTS_FILENAME", CONFIG_DIR . "accounts.csv");
     define("LOCKTIME", 3000);
     define("JSON_FMT", JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
-    define("ALLPAIRS_LIST_FILENAME", DATA_DIR . 'all-pairs-list.psv');
-    define("ALLPAIRS_ALLOC_FILENAME", DATA_DIR . 'all-pairs-allocations.psv');
-    define("CURRENT_ROUND_FILENAME", DATA_DIR . 'current-round.txt');
 
     function debug(...$args) {
         foreach($args as $arg) { echo $arg . " "; }
@@ -49,6 +46,9 @@
         var_dump($args);
         echo "</pre>";
     }
+
+    function getIntParam($pname): ?int { return isset($_GET[$pname]) ? intval($_GET[$pname]) : null; }
+    function getStringParam($pname): ?string { return isset($_GET[$pname]) ? $_GET[$pname] : null; }
 
     function readCsv(string $filename): array {
         $rows   = array_map('str_getcsv', file($filename)); // consider fgetcsv() loop instead to process newlines in values, and to save memory

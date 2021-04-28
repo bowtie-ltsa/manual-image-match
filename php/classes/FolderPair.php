@@ -1,7 +1,9 @@
 <?php
     declare(strict_types=1);
 
-    class FolderPairInfo {
+    // represents a pair of image folders; this class is used to generate TheImagePairList, 
+    // which is created once for the study and then never changes.
+    class FolderPair {
         public $filename;
         public $left;
         public $right;
@@ -16,22 +18,6 @@
         public function writeFile() {
             file_put_contents(DATA_DIR . $this->filename, json_encode($this, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
         }
-
-        // todo: public static function readFromFile(string $filename)
-    }
-
-    class ImageFolder {
-        public $id;
-        public $path;
-        public $imageCount;
-
-        public function __construct(int $id, string $path, int $imageCount) {
-            $this->id = $id;
-            $this->path = $path;
-            $this->imageCount = $imageCount;
-        }
-
-        public function num(): int { return $this->id + 1; }
     }
 
 ?>
