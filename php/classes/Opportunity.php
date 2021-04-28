@@ -3,6 +3,8 @@
 
     // aka Decision Opportunity or just "DecOp" for short.
     // Represents the opportunity to make a decision on a given imagePair, not the decision itself.
+    // An opportunity becomes a decision when the $decision property is set.
+    // We might have public class Decision extends Opportunity and do some casting and checking, perhaps.
     class Opportunity {
         // the id of the image pair, in the format FnCx-FmCy, with n<m
         public $ipid;
@@ -17,8 +19,10 @@
         // - length is always exactly 1 for an opportunity on a volunteer's OpportunityBoard.
         public $vidList;
 
-        // just add public $decision (1=same 0=different, null=no decision) and poof you have a Decision
-        // "An opportunity becomes a decision when the $decision property is set"
-        // class Decision extends Opportunity { ... } and maybe put in a check on save() functions to insist $decision is or is not null...
+        // the decision made for this opportunity. 1=same 0=different null=no decision
+        // - always null except for when in a DecisionList!!! (Save and Load should check/enforce this...)
+        public $decision;
+
+        public function IsValid(): bool { return $this->decision == null; }
     }
 ?>

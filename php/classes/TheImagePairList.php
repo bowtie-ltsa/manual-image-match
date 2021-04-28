@@ -1,24 +1,25 @@
 <?php 
     declare(strict_types=1);
 
-    // the one and only list of image pairs for the study.
+    // the one and only list of image pairs for the study. Each image pair is represented as an Opportunity not assigned and undecided.
     class TheImagePairList {
-        public const FILENAME = "all-image-pairs.psv";
-        public const FILEPATH = DATADIR . self::FILENAME;
+        public const FILENAME = "the-image-pair-list.psv";
+        public const FILEPATH = DATA_DIR . self::FILENAME;
 
-        // get an individual item in the list by position
-        public static function FromId(int $i): Opportunity {
-
+        // get an individual item in the list by position (zero-based)
+        public static function ImagePairAt(int $pos): ImagePair {
+            throw new Exception("implement With Index");
         }
 
         // get an individual item by id
-        public static function FromId(string $id): Opportunity {
-
+        public static function ImagePair(string $id): ImagePair {
+            throw new Exception("implement With Id");
         }
 
         public static function entireList(int $i): array {
             if (self::$list == null) {
                 self::$list = array();
+                throw new Exception("implement With entireList");
                 // read file line by line, convert each line to Opportunity object
             }
             return $_entireList;
@@ -26,7 +27,7 @@
         private static $_entireList; // an simple array of Opportunity objects; we may be fancier later (split into multiple files, etc)
 
         public static function CreateIfNecessary() {
-            if (file_exists(FILEPATH)) { return; }
+            if (file_exists(self::FILEPATH)) { return; }
             $mu = new Mutex(self::FILENAME);
             if (!$mu->lock()) {
                 return array(null, new BusyException());
@@ -48,7 +49,7 @@
             $imageCount = 0;
             $pairCount = 0;
             $allPairs = array();
-            $header = "ipdi|path1|path2|vidlist";
+            $header = "ipid|path1|path2|vidlist|decision";
             for ($i = 0; $i < $dirCount; $i++) {
                 $leftImages = glob($allDirs[$i]."*");
                 $leftImageCount = count($leftImages);
@@ -71,7 +72,7 @@
                             $X = $x+1; $Y = $y+1;
                             writeln("--- F${I}C$X-F${J}C$Y: $leftImages[$x] --- $rightImages[$y]");
                             $pairCount++;
-                            $allPairs[] = sprintf("F${I}C$X-F${J}C$Y|$leftImages[$x]|$rightImages[$y]|");
+                            $allPairs[] = sprintf("F${I}C$X-F${J}C$Y|$leftImages[$x]|$rightImages[$y]||");
                         }
                     }
                     $folderPair->writeFile();
@@ -81,7 +82,7 @@
             writeln("total number of image pairs: $pairCount");
             unset($allDirs); unset($leftImages); unset($rightImages);
             array_unshift($allPairs, $header);
-            file_put_contents(ALLPAIRS_LIST_FILENAME, implode(PHP_EOL, $allPairs));
+            file_put_contents(self::FILEPATH, implode(PHP_EOL, $allPairs));
         }
     }
 ?>
