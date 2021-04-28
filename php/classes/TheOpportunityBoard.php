@@ -8,12 +8,16 @@
     // makes a decision. This means that (just in swarming mode) a returning volunteer get a new opportunity (might lose their 
     // opportunity for a particular imagepair, at least for a while). If the opportunity is not being swarmed, then there is only
     // the one volunteer assigned to it, and it will stay on the board until it gets decided by that volunteer.
+    //
+    // todo: when the last item is removed from TheOpportunityBoard, and TheOpportunityList is empty, a new round is about to
+    // begin, and we should clear each volunteer's BucketBoard if present, so that a returning volunteer will contribute to the new round
+    // if possible.
     class TheOpportunityBoard {
         public const FILENAME = "the-opportunity-board.psv";
         public const FILEPATH = DATA_DIR . self::FILENAME;
 
-        public static function IsEmpty(): bool {
-            throw new Exception("not implemented")
+        public static function IsEmpty(): bool { 
+            return OppList::IsEmpty(self::FILEPATH); 
         }
 
         // returns the (one and only) opportunity from TheOpportunityBoard assigned to the volunteer -- if any.

@@ -18,8 +18,17 @@
         public const FILENAME = "the-opportunity-list.psv";
         public const FILEPATH = DATA_DIR . self::FILENAME;
 
-        public static function IsEmpty(): bool {
-            throw new Exception("not implemented");
+        public static function IsEmpty(): bool { 
+            return OppList::IsEmpty(self::FILEPATH); 
+        }
+
+        // create or recreate TheOpportunityList. This is how we start the first round or a new round.
+        public static function Create() {
+            $allPairs = TheImagePairList::GetAll();
+            $headers = array_shift($allPairs);
+            shuffle($allPairs);
+            array_unshift($allPairs, $headers);
+            file_put_contents(self::FILEPATH, implode(PHP_EOL, $allPairs));
         }
 
         // returns a new opportunity for the given volunteer from the hat, 

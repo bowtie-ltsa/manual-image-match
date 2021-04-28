@@ -6,6 +6,13 @@
         public const FILENAME = "the-image-pair-list.psv";
         public const FILEPATH = DATA_DIR . self::FILENAME;
 
+        public static function GetAll(): array {
+            if (!file_exists(self::FILEPATH)) {
+                throw new Exception("panic: TheImagePairList does not exist yet.");
+            }
+            return file(self::FILEPATH, FILE_IGNORE_NEW_LINES);
+        }
+
         // get an individual item in the list by position (zero-based)
         public static function ImagePairAt(int $pos): ImagePair {
             throw new Exception("implement With Index");
@@ -19,7 +26,7 @@
         public static function entireList(int $i): array {
             if (self::$list == null) {
                 self::$list = array();
-                throw new Exception("implement With entireList");
+                throw new Exception("implement entireList");
                 // read file line by line, convert each line to Opportunity object
             }
             return $_entireList;
@@ -84,5 +91,6 @@
             array_unshift($allPairs, $header);
             file_put_contents(self::FILEPATH, implode(PHP_EOL, $allPairs));
         }
+
     }
 ?>

@@ -2,13 +2,22 @@
     declare(strict_types=1);
 
     // represents the person who would hand out image pairs intelligently, if only a person could live inside a web server.
+    // for simplicity of code, we use a mutex to make the coordinator do just one thing at a time. Won't scale to millions
+    // or even thousands of volunteers.
     class TheCoordinator {
         public static function GetOpportunity(string $vid, ?int $did, ?string $ipid): OpportunityResult {
             try {
+                $mu = new Mutex("TheCoordinator");
+                if (!$mu->Lock()) {
+                    return new OpportunityResult(null, new BusyException());
+                }
                 return self::getOpportunityEx($vid, $did, $ipid);
             }
             catch(Exception $ex) {
                 return new OpportunityResult(null, $ex);
+            }
+            finally {
+                $mu->Unlock();
             }
         }
 
