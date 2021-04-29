@@ -86,12 +86,24 @@
 
         // get an individual item in the list by position (zero-based)
         public function OpportunityAt(?int $pos): ?Opportunity {
-            $count=count($this->lines);
-            if ($pos == null) { return null; }
+            if ($pos === null) { return null; }
             $line = @$this->lines[$pos];
             if ($line == null) { return null; }
             $opp = OppList::Opportunity($line);
+            $opp->index = $pos;
             return $opp;
+        }
+
+        public function Update(Opportunity $opp): void {
+            $i = $opp->index;
+            if ($i === null) {
+                throw new Exception("panic: index must not be null");
+            }
+            if ($i < 0 or $i > count($this->lines)) {
+                $count = count($this->lines);
+                throw new Exception("panic: unexpected index $i with count=$count");
+            }
+            $this->lines[$i] = self::Line($opp);
         }
 
         public function Contains(Opportunity $opp): bool {

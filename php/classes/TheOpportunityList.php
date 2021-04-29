@@ -55,6 +55,7 @@
                     return $opp;
                 }
             }
+            return null;
         }
     }
 ?>

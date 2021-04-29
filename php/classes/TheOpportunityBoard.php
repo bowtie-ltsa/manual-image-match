@@ -26,7 +26,7 @@
             // a small list, no more than one per volunteer; just loop
             foreach($this->lines as $line) {
                 $opp = Opportunity::FromLine($line);
-                if (in_array($vid, $this->vidList)) {
+                if (in_array($vid, $opp->vidList)) {
                     return $opp;
                 }
             }
@@ -44,7 +44,38 @@
         // Adds +1 to the vidlist length. 
         // Does *not* remove it from the volunteer's BucketList!
         public function GetNewOpportunity(string $vid, ?string $ipid): ?Opportunity {
-            throw new Exception("not implemented");
+            $minVidCount = 99999;
+            $bestChoices = array();
+
+            pre_dump($this);
+
+            // find best choices (valid for vid, and no other opportunities have fewer vids currently in the vidlist)
+            for ($i = $this->Count()-1; $i >= 0; $i--) {
+                $opp = $this->OpportunityAt($i);
+                if (BucketList::ForVolunteer($vid)->Contains($opp)) {
+                    $vidCount = count($opp->vidList);
+                    if ($vidCount < $minVidCount) {
+                        $minVidCount = $vidCount;
+                        $bestChoices = array($opp);
+                    } else if ($vidCount == $minVidCount) {
+                        $bestChoices[] = $opp;
+                    }
+                }
+            }
+
+            if (count($bestChoices) == 0) {
+                return null;
+            }
+
+            $opp = $bestChoices[0];
+
+            $opp->vidList[] = $vid;
+            $this->Update($opp);
+            $this->save();
+            pre_dump($this);
+            pre_dump($opp);
+
+            return $opp;
         }
     }
 ?>

@@ -60,12 +60,12 @@
                 return new OpportunityResult(null, new Exception("wait wait"));
                 return new OpportunityResult($opportunity, null);
             }
-            return new OpportunityResult(null, new Exception("got to here"));
 
             // if the opportunity board has an opportunity that the volunteer can join in on (swarming), return that.
             // (volunteer cannot swarm on an opportunity if he or she has already made a decision for that image pair.)
             $opportunity = TheOpportunityBoard::It()->GetNewOpportunity($vid, $ipid);
             if ($opportunity != null) {
+                return new OpportunityResult(null, new Exception("wait here2"));
                 return new OpportunityResult($opportunity, null);
             }
 
