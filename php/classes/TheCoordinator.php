@@ -58,7 +58,6 @@
             // the hat (the opportunity list) may be empty; or it might reference only image pairs aleady decided by the volunteer.
             $opportunity = TheOpportunityList::It()->GetNewOpportunity($vid, $ipid);
             if ($opportunity != null) {
-                return new OpportunityResult(null, new Exception("wait wait"));
                 return new OpportunityResult($opportunity, null);
             }
 
@@ -66,7 +65,6 @@
             // (volunteer cannot swarm on an opportunity if he or she has already made a decision for that image pair.)
             $opportunity = TheOpportunityBoard::It()->GetNewOpportunity($vid, $ipid);
             if ($opportunity != null) {
-                return new OpportunityResult(null, new Exception("wait here2"));
                 return new OpportunityResult($opportunity, null);
             }
 
