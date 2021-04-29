@@ -48,7 +48,6 @@
         public function GetNewOpportunity(string $vid, ?string $ipid): ?Opportunity {
             for ($i = $this->Count()-1; $i >= 0; $i--) {
                 $opp = $this->OpportunityAt($i);
-                debug("looking for $ipid at index $i, found $opp->ipid.");
                 if (BucketList::ForVolunteer($vid)->Contains($opp)) {
                     $opp->vidList[] = $vid;
                     $this->RemoveAt($i);

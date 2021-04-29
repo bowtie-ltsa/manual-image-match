@@ -53,13 +53,10 @@
                 return new OpportunityResult($opportunity, null);
             }
 
-            TheCoordinator::debugOpp(null);
             // pull an opportunity for the volunteer out of the hat, if possible.
             // the hat (the opportunity list) may be empty; or it might reference only image pairs aleady decided by the volunteer.
             $opportunity = TheOpportunityList::It()->GetNewOpportunity($vid, $ipid);
             if ($opportunity != null) {
-                debug("we got an opportunity from the opportunity list.");
-                TheCoordinator::debugOpp($opportunity);
                 return new OpportunityResult(null, new Exception("wait wait"));
                 return new OpportunityResult($opportunity, null);
             }
@@ -83,16 +80,5 @@
             return new OpportunityResult(null, new VidFinishedException());
         }
 
-        private static function debugOpp(?Opportunity $opp): void {
-            debug("");
-            debug("The opportunity:");
-            pre_dump($opp);
-            debug("");
-            debug("TheOpportunityList:");
-            pre_dump(TheOpportunityList::It());
-            debug("");
-            debug("TheOpportunityBoard:");
-            pre_dump(TheOpportunityBoard::It());
-        }
     }
 ?>

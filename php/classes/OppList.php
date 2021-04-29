@@ -20,12 +20,8 @@
 
         public static function Line(Opportunity $opp): string { 
             $line = null;
-            debug("###");
-            pre_dump($opp);
-            debug("xxx");
             foreach(OppList::HeadersArray() as $header) {
                 $value = $opp->{$header};
-                debug("### header=$header, value=$value.");
                 if ($line == null) { $line = $value; }
                 elseif ($header != "vidList") { $line = $line . PIPE . $value; }
                 else { $line = $line . PIPE . implode(",", $value); }
@@ -94,12 +90,7 @@
             if ($pos == null) { return null; }
             $line = @$this->lines[$pos];
             if ($line == null) { return null; }
-            debug("%%% for $this->filename OpportuntiyAt(%pos):");
-            debug("%%% line=$line");
             $opp = OppList::Opportunity($line);
-            debug("%%% opp:");
-            pre_dump($opp);
-            debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
             return $opp;
         }
 
@@ -135,13 +126,7 @@
             if ($this->Contains($opp)) {
                 throw new Exception("panic: opportunity is already part of $this->filepath: $opp->ipid");
             }
-            debug("for $this->filepath, adding opp:");
-            pre_dump($opp);
-            debug("before add -- this->lines:");
-            pre_dump($this->lines);
             $this->lines[] = self::Line($opp);
-            debug("after add -- this->lines:");
-            pre_dump($this->lines);
             $this->save();
         }
 
