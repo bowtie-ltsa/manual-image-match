@@ -49,8 +49,9 @@
         echo "</pre>";
     }
 
-    function getIntParam($pname): ?int { return isset($_GET[$pname]) ? intval($_GET[$pname]) : null; }
-    function getStringParam($pname): ?string { return isset($_GET[$pname]) ? $_GET[$pname] : null; }
+    function getIntParam(string $pname): ?int { return isset($_GET[$pname]) ? intval($_GET[$pname]) : null; }
+    function getStringParam(string $pname): ?string { return isset($_GET[$pname]) ? $_GET[$pname] : null; }
+    function qsParam(string $pname, $pvalue): string { return $pvalue !== null ? "&$pname=$pvalue" : "";}
 
     function readCsv(string $filename): array {
         $rows   = array_map('str_getcsv', file($filename)); // consider fgetcsv() loop instead to process newlines in values, and to save memory

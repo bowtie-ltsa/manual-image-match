@@ -9,27 +9,21 @@
 
     list($opp, $err) = TheCoordinator::GetOpportunity($vid, $did, $ipid)->Result();
     if ($err instanceof BusyException) {
-        header("Location: please-wait.php?vid=$vid&q=$ipa->q()");
+        header("Location: please-wait.php?vid=$vid". qsParam("did", $did) . qsParam("ipid", $ipid));
         exit();
     }
     if ($err instanceof HaltException) {
         exit();
     }
     if ($err instanceof VidFinishedException) {
-        header("Location: vid-finished.php?$vid=$vid&did=$did&ipid=$ipid");
+        header("Location: vid-finished.php?$vid=$vid");
         exit();
     }
     if ($err != null) {
         writeln("halting on unexpected error:");
         echo preTrace($err);
         exit();
-    }
-    if ($did != $opp->$somethingsomething || $ipid != $opp->$somethingelse) { // decision requested did not exist, so redirect
-        // redirect so the page is properly bookmarkable
-        header("Location: show-question.php?vid=$vid&did=something&ipid=somethingelse");
-        exit();
-    }
-
+    }    
 ?>
 <div>
 ready to display this opportunity:

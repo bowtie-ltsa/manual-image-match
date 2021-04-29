@@ -47,8 +47,6 @@
             $minVidCount = 99999;
             $bestChoices = array();
 
-            pre_dump($this);
-
             // find best choices (valid for vid, and no other opportunities have fewer vids currently in the vidlist)
             for ($i = $this->Count()-1; $i >= 0; $i--) {
                 $opp = $this->OpportunityAt($i);
@@ -72,8 +70,6 @@
             $opp->vidList[] = $vid;
             $this->Update($opp);
             $this->save();
-            pre_dump($this);
-            pre_dump($opp);
 
             return $opp;
         }

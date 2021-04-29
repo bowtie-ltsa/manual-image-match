@@ -30,9 +30,10 @@
                 TheOpportunityList::It()->StartNewRound();
             }
 
-            // if a decision was requested, and exists, return that
+            // if a decision was requested, and exists, return that (and ignore $ipid)
             $decision = DecisionList::ForVolunteer($vid)->DecisionAt($did);
-            if ($decision != null) { 
+            if ($decision != null) {
+                $decision->did = $decision->index;
                 return new OpportunityResult($decision, null);
             }
 
