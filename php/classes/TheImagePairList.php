@@ -14,7 +14,7 @@
         }
 
         public function GetAll(): array {
-            // for now at least, this is simple, because we keep the entire thing in memory
+            // for now at least, this is simple, because we keep the entire list in memory
             return $this->lines;
         }
 

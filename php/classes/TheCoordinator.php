@@ -46,20 +46,24 @@
             if ($opportunity != null) {
                 return new OpportunityResult($opportunity, null);
             }
-            return new OpportunityResult(null, new Exception("got to here"));
 
             // if the volunteer already has an opportunity on his or her bucket board, return that
-            $opportunity = BucketBoard::It()->GetExistingOpportunity($vid);
+            $opportunity = BucketBoard::ForVolunteer($vid)->GetExistingOpportunity();
             if ($opportunity != null) {
                 return new OpportunityResult($opportunity, null);
             }
 
+            TheCoordinator::debugOpp(null);
             // pull an opportunity for the volunteer out of the hat, if possible.
             // the hat (the opportunity list) may be empty; or it might reference only image pairs aleady decided by the volunteer.
             $opportunity = TheOpportunityList::It()->GetNewOpportunity($vid, $ipid);
             if ($opportunity != null) {
+                debug("we got an opportunity from the opportunity list.");
+                TheCoordinator::debugOpp($opportunity);
+                return new OpportunityResult(null, new Exception("wait wait"));
                 return new OpportunityResult($opportunity, null);
             }
+            return new OpportunityResult(null, new Exception("got to here"));
 
             // if the opportunity board has an opportunity that the volunteer can join in on (swarming), return that.
             // (volunteer cannot swarm on an opportunity if he or she has already made a decision for that image pair.)
@@ -77,6 +81,18 @@
             // at this point we know the volunteer's bucket list is empty
             // the volunteer has finished the study
             return new OpportunityResult(null, new VidFinishedException());
+        }
+
+        private static function debugOpp(?Opportunity $opp): void {
+            debug("");
+            debug("The opportunity:");
+            pre_dump($opp);
+            debug("");
+            debug("TheOpportunityList:");
+            pre_dump(TheOpportunityList::It());
+            debug("");
+            debug("TheOpportunityBoard:");
+            pre_dump(TheOpportunityBoard::It());
         }
     }
 ?>

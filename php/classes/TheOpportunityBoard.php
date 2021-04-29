@@ -22,19 +22,28 @@
 
         // returns the (one and only) opportunity from TheOpportunityBoard assigned to the volunteer -- if any.
         // returns null if none.
-        public function GetExistingOpportunity(string $vid): Opportunity {
-            throw new Exception("not implemented");
+        public function GetExistingOpportunity(string $vid): ?Opportunity {
+            // a small list, no more than one per volunteer; just loop
+            foreach($this->lines as $line) {
+                $opp = Opportunity::FromLine($line);
+                if (in_array($vid, $this->vidList)) {
+                    return $opp;
+                }
+            }
+            return null;
         }
 
-        // returns an opportunity from TheOpportunityBoard that the volunteer,
-        // one that is valid for the volunteer (on their bucket list / they have already made a decision on it).
-        // this is an opportunity for swarming (increasing vidlist length)
-        // it is an error to call this function if the volunteer already has something on TheOpportunityBoard -or- their BucketBoard
-        // from among those that are valid for the volunteer, chooses from among those with least number of volunteers already.
-        // it may choose randomly or it may consider $ipid.
-        // adds +1 to the vidlist length. 
-        // does *not* remove it from the volunteer's BucketList!
-        public function GetNewOpportunity(string $vid, ?string $ipid): Opportunity {
+        // returns an opportunity from TheOpportunityBoard for the named the volunteer, one that is valid for the volunteer 
+        // (it's on their bucket list, i.e. they have *not* already made a decision on it). This is an opportunity for swarming 
+        // (increasing vidlist length).
+        //
+        // Note: It is an error to call this function if the volunteer already has something on TheOpportunityBoard -or- their BucketBoard.
+        //
+        // From among those that are valid for the volunteer, chooses from among those with least number of volunteers already.
+        // It may choose randomly or it may consider $ipid.
+        // Adds +1 to the vidlist length. 
+        // Does *not* remove it from the volunteer's BucketList!
+        public function GetNewOpportunity(string $vid, ?string $ipid): ?Opportunity {
             throw new Exception("not implemented");
         }
     }

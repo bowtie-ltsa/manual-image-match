@@ -6,13 +6,10 @@
     // An opportunity becomes a decision when the $decision property is set.
     // We might have public class Decision extends Opportunity and do some casting and checking, perhaps.
     class Opportunity {
-        public static function FromLine(string $line) {
-            $opportunity = new Opportunity();
-            foreach(OppList:Array($line) as $key => $value) {
-                $opportunity->{$key} = $value;
-            }
-            return $opportunity;
-        }
+
+        public static function FromLine(string $line) { return OppList::Opportunity($line); }
+
+        public function ToLine(): string { return OppList::Line($opp); }
 
         // the id of the image pair, in the format FnCx-FmCy, with n<m
         public $ipid;
@@ -20,7 +17,7 @@
         public $path1;
         public $path2;
 
-        // the volunteers who have the opportunity. a simple array of strings.
+        // the volunteers who have the opportunity. a simple array of $vid values (strings).
         // - length is always zero for an opportuntiy in TheImagePairList.
         // - length is always zero for an opportunity in TheOpportunityList.
         // - length is always 1 or more for an opportunity on TheOpportunityBoard.

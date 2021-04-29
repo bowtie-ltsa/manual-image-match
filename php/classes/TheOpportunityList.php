@@ -32,21 +32,30 @@
         public function StartNewRound() {
             $this->lines = TheImagePairList::It()->GetAll(); // a copy of the image pair array
             shuffle($this->lines);
-            file_put_contents(self::FILEPATH, OppList::HEADERS . PHP_EOL . implode(PHP_EOL, $this->lines));
+            $this->save();
             
             BucketBoard::ClearAll();
         }
 
-        // returns a new opportunity for the given volunteer from the hat, 
-        // one that is valid for the volunteer (on their bucket list / they have already made a decision on it)
-        // returns null if there are no opportunities for the volunteer
-        // may or may not use the $ipid to provide continuity for the volunteer
-        // removes the opportunity from TheOpportunityList
-        // adds it to TheOpportunityBoard (with vidlist length of 1)
-        // does *not* remove it from the volunteer's BucketList!
-        // it is an error to call this function if the volunteer already has something on TheOpportunityBoard -or- their BucketBoard
-        public function GetNewOpportunity(string $vid, ?string $ipid): Opportunity {
-            throw new Exception("not implemented");
+        // Returns a new opportunity for the given volunteer "from the hat", one that is valid for the volunteer (it's on their bucket list, 
+        // i.e. they have *not* already made a decision on it). Returns null if there are no opportunities for the volunteer.
+        // This method may or may not use the $ipid to provide continuity for the volunteer.
+        // It removes the opportunity from TheOpportunityList. This ensures that no other volunteers will get the same opportunity for this 
+        // round, unless swarming is needed, near the end of the round, to finish the round.
+        // Adds it to TheOpportunityBoard (with vidlist length of 1).
+        // Does *not* remove it from the volunteer's BucketList!
+        // Note: it is an error to call this function if the volunteer already has something on TheOpportunityBoard -or- their BucketBoard!
+        public function GetNewOpportunity(string $vid, ?string $ipid): ?Opportunity {
+            for ($i = $this->Count()-1; $i >= 0; $i--) {
+                $opp = $this->OpportunityAt($i);
+                debug("looking for $ipid at index $i, found $opp->ipid.");
+                if (BucketList::ForVolunteer($vid)->Contains($opp)) {
+                    $opp->vidList[] = $vid;
+                    $this->RemoveAt($i);
+                    TheOpportunityBoard::It()->Add($opp);
+                    return $opp;
+                }
+            }
         }
     }
 ?>

@@ -4,10 +4,44 @@
     // for at least, we keep the static classes static, but try to keep the code DRY.
     // eventually we may take the time to create a generic, nonstatic OpportunityList....
     class OppList {
-        public const HEADERS = "ipid|path1|path2|vidlist|decision";
+        public const HEADERS = "ipid|path1|path2|vidList|decision";
 
-        public static function HeadersArray(): array { return explode(PIPE, self::HEADERS); }
-        public static function Array(string $line): array { return explode(PIPE, $line); }
+        public static function HeadersArray(): array { 
+            if (self::$headersArray == null) {
+                self::$headersArray = explode(PIPE, self::HEADERS);
+            }
+            return self::$headersArray;
+        }
+        private static $headersArray = null;
+        
+        public static function Array(string $line): array { 
+            return array_combine(self::HeadersArray(), explode(PIPE, $line));
+        }
+
+        public static function Line(Opportunity $opp): string { 
+            $line = null;
+            debug("###");
+            pre_dump($opp);
+            debug("xxx");
+            foreach(OppList::HeadersArray() as $header) {
+                $value = $opp->{$header};
+                debug("### header=$header, value=$value.");
+                if ($line == null) { $line = $value; }
+                elseif ($header != "vidList") { $line = $line . PIPE . $value; }
+                else { $line = $line . PIPE . implode(",", $value); }
+            }
+            return $line;
+        }
+
+        public static function Opportunity(string $line): Opportunity {
+            $opportunity = new Opportunity();
+            foreach(self::Array($line) as $key => $value) {
+                if ($key != "vidList") { $opportunity->{$key} = $value; }
+                elseif ($value != "" && $value != null) { $opportunity->vidList = explode(",", $value); }
+                else { $opportunity->vidList = array(); }
+            }
+            return $opportunity;
+        }
 
         // $lists is a map[$vid]OppList objects that are in memory
         // so we don't have to load them multiple times for the same request
@@ -45,16 +79,70 @@
         protected $lines; // a simple array of strings
 
         public function IsEmpty(): bool {
-            // simple, for now at least, since we keep it in memory
+            // simple, for now at least, since we keep the entire list in memory
             return count($this->lines) == 0;
+        }
+
+        public function Count(): int {
+            // simple, for now at least, since we keep the entire list in memory
+            return count($this->lines);
         }
 
         // get an individual item in the list by position (zero-based)
         public function OpportunityAt(?int $pos): ?Opportunity {
+            $count=count($this->lines);
             if ($pos == null) { return null; }
             $line = @$this->lines[$pos];
             if ($line == null) { return null; }
-            return Opportunity::FromLine($line);
+            debug("%%% for $this->filename OpportuntiyAt(%pos):");
+            debug("%%% line=$line");
+            $opp = OppList::Opportunity($line);
+            debug("%%% opp:");
+            pre_dump($opp);
+            debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+            return $opp;
+        }
+
+        public function Contains(Opportunity $opp): bool {
+            // keeping it simple for now - just scan. In future we could do something like maintain an index (on disk and maybe in memory).
+            $ipid = $opp->ipid . PIPE;
+            $n = strlen($ipid);
+            foreach($this->lines as $line) {
+                if (strncmp($line, $ipid, $n) === 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public function RemoveAt(int $i): void {
+            $count = count($this->lines);
+            if ($i < 0 || $i >= $count) {
+                throw new Exception("panic: unexpected value $i when count(lines)=$count.");
+            }
+            unset($this->lines[$i]);
+            if ($i < $count-1) {
+                $this->lines = array_values($this->lines);
+            }
+            $this->save();
+        }
+
+        protected function save(): void {
+            file_put_contents($this->filepath, OppList::HEADERS . PHP_EOL . implode(PHP_EOL, $this->lines));
+        }
+
+        public function Add(Opportunity $opp): void {
+            if ($this->Contains($opp)) {
+                throw new Exception("panic: opportunity is already part of $this->filepath: $opp->ipid");
+            }
+            debug("for $this->filepath, adding opp:");
+            pre_dump($opp);
+            debug("before add -- this->lines:");
+            pre_dump($this->lines);
+            $this->lines[] = self::Line($opp);
+            debug("after add -- this->lines:");
+            pre_dump($this->lines);
+            $this->save();
         }
 
     }

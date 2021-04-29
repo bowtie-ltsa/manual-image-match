@@ -14,23 +14,25 @@
 
         // called at the start of a new round.
         public static function ClearAll() {
-            foreach(glob(DATA_DIR . "*" . FILENAME_SUFFIX) as $bbFile) {
+            foreach(glob(DATA_DIR . "*" . self::FILENAME_SUFFIX) as $bbFile) {
                 unlink($bbFile);
-                unset(self:$lists[$bbFile]);
+                unset(self::$lists[$bbFile]);
             }
         }
 
         public static function ForVolunteer(string $vid): BucketBoard {
             $filepath = sprintf(self::FILEPATH_FMT, $vid);
-            $oppList = parent::ForFile($filepath);
-            $bbList = cast($oppList, new BucketBoard());
-            return $bbList;
+            $bktBoard = new BucketBoard();
+            parent::ForFile($filepath, $bktBoard);
+            return $bktBoard;
         }
 
         // returns the (one and only) opportunity from the volunteer's BucketBoard -- if any.
         // returns null if none.
-        public function GetExistingOpportunity(string $vid): Opportunity {
-            throw new Exception("not implemented");
+        public function GetExistingOpportunity(): ?Opportunity {
+            if (count($this->lines) == 0) { return null; }
+            $opp = Opportunity::FromLine($this->lines[0]);
+            return $opp;
         }
 
     }

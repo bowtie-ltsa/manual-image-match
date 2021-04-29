@@ -26,7 +26,7 @@
         private function initialize(): void {
             $this->lines = TheImagePairList::It()->GetAll(); // a copy of the image pair array
             shuffle($this->lines);
-            file_put_contents($this->filepath, OppList::HEADERS . PHP_EOL . implode(PHP_EOL, $this->lines));
+            $this->save();
         }
 
         public function IsEmpty(): bool {
