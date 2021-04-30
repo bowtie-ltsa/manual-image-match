@@ -3,7 +3,7 @@ The "Manual Image Match" project aims to provide a simple website to facilitate 
 
 The input to the project is a set of `image folders`; each image folder is thought to represent the captures (images) for a single day.
 
-The goal of the project is to make `decisions` about every relevant `pair of images`. We eliminate `image pairs` from the same folder (from the same day), preferring to assume that recaptures do not take place within a single day (single folder). (Changing this rule would be a very minor code change. Using the rule reduces the work by about 10%.)
+The goal of the project is to make `decisions` about every relevant `pair of images`. We eliminate `image pairs` from the same folder (from the same day), preferring to assume that recaptures do not take place within a single day (single folder). (Changing this rule would be a very minor code change. Using the rule reduces the volunteers' workload by about 10%.)
 
 The `decision` to make for each image pair is binary: do the two images "match" or not. For a capture-recapture study, this question is more precisely phrased as "Is the same animal pictured in each of the two images?". Tweaking this project to make it a fuzzy decision, or a multi-valued decision, rather than a binary one, would be a small code change.
 
