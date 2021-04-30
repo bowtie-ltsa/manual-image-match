@@ -3,11 +3,9 @@
 
     class Account {
         public $name = "(not set)";
-        public $folders = array();
-
-        public function __construct(string $name, array $folders) { 
+        
+        public function __construct(string $name) { 
             $this->name = $name;
-            $this->folders = $folders;
         }
     }
 ?>
