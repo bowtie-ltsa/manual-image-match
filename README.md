@@ -1,5 +1,5 @@
 # manual-image-match
-The "Manual Image Match" project aims to provide a simple website to facilitate the process of having a small set (10s not 100s) of `volunteers` "match" a small set (100s not 1000s) of `images`. The inspiration of this website is a `capture-recapture` study (aka "mark and capture"), for amphibians that cannot be easily marked, and where recaptures identification through automated means is not feasible.
+The "Manual Image Match" project aims to provide a simple website to facilitate the process of having a small set (10s not 100s) of `volunteers` "match" a small set (100s not 1000s) of `images`. The inspiration for building this simple web app was a `capture-recapture` study (aka "mark and capture") in which long-toed salamanders were not marked, but could be identified visually by spot patterns. Recapture identification through automated means was not feasible / error rates not acceptable.
 
 The input to the project is a set of `image folders`; each image folder is thought to represent the captures (images) for a single day.
 
@@ -53,7 +53,7 @@ We anticipate navigation options that allow the volunteer to:
   - The volunteer is essentially helping to get a head start on a future round.
 
 
-# The Coordinator's procedure (using the Defitinitions above)
+# The Coordinator's procedure (using the Definitions above)
 The following procedure is used by the website software whenever a volunteer shows up, to provide the volunteer with an `opportunity` (including the "opportunity" to view and possibly change a past `decision`).
 
 1. If `The Image Pair List` is empty, create it.
