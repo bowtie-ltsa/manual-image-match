@@ -1,7 +1,7 @@
 <?php
     declare(strict_types=1);
     require_once "first-things.php";
-    require_once "createCookie.php";
+    require_once "functions/createCookie.php";
 
     include "get-volunteer.php";
 
