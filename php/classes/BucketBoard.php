@@ -24,8 +24,13 @@
             $filepath = sprintf(self::FILEPATH_FMT, $vid);
             $bktBoard = new BucketBoard();
             parent::ForFile($filepath, $bktBoard);
+            $bktBoard->vid = $vid;
             return $bktBoard;
         }
+
+        // instance variables and methods
+
+        private $vid; // string, the id of the volunteer associated with this BucketBoard
 
         // returns the (one and only) opportunity from the volunteer's BucketBoard -- if any.
         // returns null if none.

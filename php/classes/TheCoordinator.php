@@ -68,14 +68,14 @@
                 return new OpportunityResult($opportunity, null);
             }
 
-            // if anything at all is on the volunteer's bucket list, return one
+            // if anything at all is on the volunteer's bucket list, return it
             $opportunity = BucketList::ForVolunteer($vid)->GetNewOpportunity($ipid);
             if ($opportunity != null) {
                 return new OpportunityResult($opportunity, null);
             }
 
-            // at this point we know the volunteer's bucket list is empty
-            // the volunteer has finished the study
+            // At this point we know the volunteer's bucket list is empty. The volunteer has finished the study. 
+            // Really, we shouldn't get to this line, because this condition has already been checked, at the top of this method.
             return new OpportunityResult(null, new VidFinishedException());
         }
 

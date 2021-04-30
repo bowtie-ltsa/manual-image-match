@@ -13,6 +13,7 @@
             $mustInitialize = !file_exists($filepath);
             $bktList = new BucketList();
             parent::ForFile($filepath, $bktList);
+            $bktList->vid = $vid;
             if ($mustInitialize) {
                 $bktList->initialize();
             }
@@ -20,6 +21,8 @@
         }
 
         // instance variables and methods
+
+        private $vid; // string, the id of the volunteer associated with this BucketList
 
         // called only when the volunteer's bucket list is first created.
         // this method creates a shuffled copy of TheImagePairList.
@@ -33,9 +36,18 @@
             return parent::IsEmpty($this->filepath);
         }
 
-        // returns any item from the BucketList. may consider $ipid.
-        public function GetNewOpportunity(string $vid, ?string $ipid): Opportunity {
-            throw new Exception("not implemented");
+        // Returns an Opportunity from the volunteer's BucketList. May consider $ipid when picking one. 
+        // Adds that Opportunity to the BucketBoard. Does *not* remove it from the BucketList.
+        // It is an error to call this method except when all other attempts to find an opportunity for the 
+        // volunteer have failed; this is the last ditch solution to just get the volunteer "any" valid opportunity.
+        // In particular, the BucketBoard is assumed to be empty (already checked) when this method is called.
+        // Returns null if the volunteer's BucketList is empty. (In which case, the volunteer is finished with the study.)
+        public function GetNewOpportunity(?string $ipid): ?Opportunity {
+            $count = $this->Count();
+            if ($count == 0) return null;
+            $opp = $this->OpportunityAt($count - 1);
+            BucketBoard::ForVolunteer($this->vid)->Add($opp);
+            return $opp;
         }
     }
 ?>

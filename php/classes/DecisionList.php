@@ -10,10 +10,13 @@
             $filepath = sprintf(self::FILEPATH_FMT, $vid);
             $decList = new DecisionList();
             parent::ForFile($filepath, $decList);
+            $decList->vid = $vid;
             return $decList;
         }
 
         // instance variables and methods
+
+        private $vid; // string, the id of the volunteer associated with this DecisionList
 
         public function DecisionAt(?int $pos): ?Decision {
             return $this->OpportunityAt($pos);
