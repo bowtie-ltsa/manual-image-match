@@ -1,5 +1,5 @@
 # manual-image-match
-The "Manual Image Match" project aims to provide a simple website to facilitate the process of having a small set (10s not 100s) of `volunteers` "match" a small set (100s not 1000s) of `images`. The inspiration for building this simple web app was a `capture-recapture` study (aka "mark and capture") in which long-toed salamanders were not marked, but could be identified visually by spot patterns. Recapture identification through automated means was not feasible / error rates not acceptable.
+The "Manual Image Match" project aims to provide a simple website to facilitate the process of having a small group of `volunteers` "match" a small set of `images`. (Tens of volunteers and hundreds of images. Nothing big.) The inspiration for building this simple web app was a `capture-recapture` study (aka "mark and capture") in which long-toed salamanders were not marked, but could be identified visually by spot patterns. Recapture identification through automated means was not feasible / error rates not acceptable.
 
 The input to the project is a set of `image folders`; each image folder is thought to represent the captures (images) for a single day.
 
