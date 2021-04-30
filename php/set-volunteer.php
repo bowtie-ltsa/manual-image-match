@@ -8,6 +8,6 @@
     const DAYS = 60*60*24;
     createcookie("vid", $vid, 90*DAYS);
 
-    header("Location: show-question.php?vid=$vid");
+    header("Location: show-image-pair.php?vid=$vid");
     exit();
 ?>
