@@ -7,6 +7,7 @@
     class TheCoordinator {
         public static function GetOpportunity(string $vid, ?int $did, ?string $ipid): OpportunityResult {
             try {
+                info(hi(__METHOD__), "did=$did, ipid=$ipid");
                 $mu = new Mutex("TheCoordinator");
                 if (!$mu->Lock()) {
                     return new OpportunityResult(null, new BusyException());
@@ -18,6 +19,7 @@
             }
             finally {
                 $mu->Unlock();
+                info(bye(__METHOD__));
             }
         }
 

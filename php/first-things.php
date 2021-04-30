@@ -2,6 +2,13 @@
     declare(strict_types=1);
     error_reporting(E_ALL);
 
+    define("RQ_VID", "custom_data_vid");
+    $_REQUEST[RQ_VID] = '';
+    define("RQ_INDENT", "custom_data_indent");
+    $_REQUEST[RQ_INDENT] = 0;
+    define("RQ_REQID", "custom_data_request_id");
+    $_REQUEST[RQ_REQID] = hash('crc32b', $_SERVER['REMOTE_ADDR'] . $_SERVER['REQUEST_TIME_FLOAT'] . $_SERVER['REMOTE_PORT']);
+
     spl_autoload_register(function($className) {
         try {
             $filename = "classes/${className}.php";
@@ -17,6 +24,7 @@
     require_once "classes/exceptions.php";
     require_once "functions/stackTrace.php";
     require_once "functions/cast.php";
+    require_once "functions/info.php";
     
     define("IMAGE_DATA_DIR", 'image-data/');
     define("CONFIG_DIR", "config/");

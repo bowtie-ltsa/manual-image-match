@@ -45,13 +45,18 @@
         public function foo() { return self::$lists; }
 
         public static function ForFile(string $filepath, OppList &$subtype) {
+            info(hi(__METHOD__), basename($filepath));
             $list = @self::$lists[$filepath];
+            $src = "";
             if ($list == null) {
                 $list = self::Load($filepath, $subtype);
                 self::$lists[$filepath] = $list;
+                $src = "load";
             } else { 
-                $subtype = $list; 
+                $subtype = $list;
+                $src = "cache";
             }
+            info(bye(__METHOD__), "src=$src count=" . count($list->lines));
         }
 
         public static function Load(string $filepath, OppList &$subtype): OppList {

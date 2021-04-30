@@ -23,10 +23,12 @@
         // returns the (one and only) opportunity from TheOpportunityBoard assigned to the volunteer -- if any.
         // returns null if none.
         public function GetExistingOpportunity(string $vid): ?Opportunity {
+            info(hi(__METHOD__));
             // a small list, no more than one per volunteer; just loop
             foreach($this->lines as $line) {
                 $opp = Opportunity::FromLine($line);
                 if (in_array($vid, $opp->vidList)) {
+                    info(bye(__METHOD__), "opp=" . $opp->String());
                     return $opp;
                 }
             }

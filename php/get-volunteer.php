@@ -14,4 +14,6 @@
         header('Location: index.php?problem=id-not-found');
         exit();
     }
+
+    $_REQUEST[RQ_VID] = $vid;
 ?>

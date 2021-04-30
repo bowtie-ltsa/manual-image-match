@@ -30,11 +30,13 @@
         // todo: At the start of round `k`, we could take the effort to include just those image pairs that have fewer than `k` decisions, 
         // rather than the simple approach of merely copying and shuffling TheImagePairList.
         public function StartNewRound() {
+            info(hi(__METHOD__));
             $this->lines = TheImagePairList::It()->GetAll(); // a copy of the image pair array
             shuffle($this->lines);
             $this->save();
             
             BucketBoard::ClearAll();
+            info(bye(__METHOD__), "count=" . count($this->lines));
         }
 
         // Returns a new opportunity for the given volunteer "from the hat", one that is valid for the volunteer (it's on their bucket list, 
@@ -46,12 +48,14 @@
         // Does *not* remove it from the volunteer's BucketList!
         // Note: it is an error to call this function if the volunteer already has something on TheOpportunityBoard -or- their BucketBoard!
         public function GetNewOpportunity(string $vid, ?string $ipid): ?Opportunity {
+            info(hi(__METHOD__), "ipid=$ipid");
             for ($i = $this->Count()-1; $i >= 0; $i--) {
                 $opp = $this->OpportunityAt($i);
                 if (BucketList::ForVolunteer($vid)->Contains($opp)) {
                     $opp->vidList[] = $vid;
                     $this->RemoveAt($i);
                     TheOpportunityBoard::It()->Add($opp);
+                    info(bye(__METHOD__), "opp=" . $opp->String());
                     return $opp;
                 }
             }

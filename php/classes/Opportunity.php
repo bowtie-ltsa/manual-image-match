@@ -29,5 +29,7 @@
         public $decision;
 
         public function IsValid(): bool { return $this->decision == null; }
+
+        public function String(): string { return "{ ipid='$this->ipid', vidList='" . implode(",", $this->vidList) . "', decision='$this->decision' }"; }
     }
 ?>
