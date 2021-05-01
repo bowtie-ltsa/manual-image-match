@@ -43,10 +43,18 @@
         // In particular, the BucketBoard is assumed to be empty (already checked) when this method is called.
         // Returns null if the volunteer's BucketList is empty. (In which case, the volunteer is finished with the study.)
         public function GetNewOpportunity(?string $ipid): ?Opportunity {
+            Log::In();
+            Log::Mention(__METHOD__);
             $count = $this->Count();
-            if ($count == 0) return null;
+            if ($count == 0) {
+                Log::Mention("No New Opportunity from the vid's Bucket List");
+                Log::Out();
+                return null;
+            }
             $opp = $this->OpportunityAt($count - 1);
             BucketBoard::ForVolunteer($this->vid)->Add($opp);
+            Log::Event("A New Opportunity from the vid's Bucket List", $opp->String());
+            Log::Out();
             return $opp;
         }
     }

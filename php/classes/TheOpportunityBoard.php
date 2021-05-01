@@ -23,15 +23,19 @@
         // returns the (one and only) opportunity from TheOpportunityBoard assigned to the volunteer -- if any.
         // returns null if none.
         public function GetExistingOpportunity(string $vid): ?Opportunity {
-            info(hi(__METHOD__));
+            Log::In();
+            Log::Mention(__METHOD__);
             // a small list, no more than one per volunteer; just loop
             foreach($this->lines as $line) {
                 $opp = Opportunity::FromLine($line);
                 if (in_array($vid, $opp->vidList)) {
-                    info(bye(__METHOD__), "opp=" . $opp->String());
+                    Log::Event("Use Existing Opportunity from The Opportunity Board", $opp->String());
+                    Log::Out();
                     return $opp;
                 }
             }
+            Log::Mention("No Existing Opportunity from The Opportunity Board");
+            Log::Out();
             return null;
         }
 
@@ -46,6 +50,8 @@
         // Adds +1 to the vidlist length. 
         // Does *not* remove it from the volunteer's BucketList!
         public function GetNewOpportunity(string $vid, ?string $ipid): ?Opportunity {
+            Log::In();
+            Log::Mention(__METHOD__);
             $minVidCount = 99999;
             $bestChoices = array();
 
@@ -64,6 +70,8 @@
             }
 
             if (count($bestChoices) == 0) {
+                Log::Mention("No New Opportunity from The Opportunity Board");
+                Log::Out();
                 return null;
             }
 
@@ -73,6 +81,8 @@
             $this->Update($opp);
             $this->save();
 
+            Log::Event("A New Opportunity from The Opportunity Board");
+            Log::Out();
             return $opp;
         }
     }

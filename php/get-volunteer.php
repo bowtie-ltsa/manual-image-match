@@ -15,5 +15,5 @@
         exit();
     }
 
-    $_REQUEST[RQ_VID] = $vid;
+    Log::SetVid($vid);
 ?>
