@@ -104,7 +104,7 @@
                                     <div class="navbar-left">
                                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                       <label class="btn btn-info <?=$sameClass?>" onclick="setDirty();">
-                                        <input type="radio" name="decision" value="1" id="decisionSame" autocomplete="off" checked> Same
+                                        <input type="radio" name="decision" value="1" id="decisionSame" autocomplete="off"> Same
                                       </label>
                                       <label class="btn btn-info <?=$diffClass?>" onclick="setDirty();">
                                         <input type="radio" name="decision" value="0" id="decisionDiff" autocomplete="off"> Different
@@ -139,12 +139,12 @@
                                     </div>
 
                                     <div class="navbar-right">
-                                        <button class="btn btn-primary vcr" type="submit">&lt;&lt;</button>
-                                        <button class="btn btn-primary vcr" type="submit">-10</button>
-                                        <button class="btn btn-primary vcr" type="submit">Prev</button>
-                                        <button class="btn btn-primary vcr" type="submit">Next</button>
-                                        <button class="btn btn-primary vcr" type="submit">+10</button>
-                                        <button class="btn btn-primary vcr" type="submit">&gt;&gt;</button>
+                                        <button class="btn btn-primary vcr" type="button">&lt;&lt;</button>
+                                        <button class="btn btn-primary vcr" type="button">-10</button>
+                                        <button class="btn btn-primary vcr" type="button">Prev</button>
+                                        <button class="btn btn-primary vcr" type="button">Next</button>
+                                        <button class="btn btn-primary vcr" type="button">+10</button>
+                                        <button class="btn btn-primary vcr" type="button">&gt;&gt;</button>
                                     </div>
                                 </div>
                             </div>
