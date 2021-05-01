@@ -89,7 +89,7 @@
 
         public static function PanicAndDie(string $text, ...$data): void { 
             self::writelog(LogLevel::Panic, $text, $data);
-            die($text . ": " . implode(PIPE, $data));
+            die($text . ($data ? ": " : "") . implode(";", $data));
         }
 
         public static function PanicException(string $text, ...$data): Exception { 
@@ -106,7 +106,11 @@
 
             $bt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
             //pre_dump($bt);
-            $callinfo = @$bt[2]['class'] . @$bt[2]['type']  . @$bt[2]['function'] . ':'. @$bt[1]['line'];
+            $callinfo = 
+                (@$bt[2]['function']
+                    ? @$bt[2]['class'] . @$bt[2]['type']  . @$bt[2]['function'] 
+                    : basename($bt[1]['file']))
+                . ':' . @$bt[1]['line'];
 
             $entry = (new DateTime("now", new DateTimeZone('America/Los_Angeles')))->format("Y-m-d H:i:s.v")
                 . PIPE . self::$reqid
@@ -116,7 +120,7 @@
                 . PIPE . self::$remoteIp
                 . PIPE . LogLevel::Name($logLevel)
                 . PIPE . $text
-                . PIPE . implode(PIPE, $data)
+                . PIPE . implode(";", $data)
                 . PIPE . $callinfo
                 . PHP_EOL;
 
