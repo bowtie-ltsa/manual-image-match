@@ -64,6 +64,9 @@
     function getStringParam(string $pname): ?string { return isset($_GET[$pname]) ? $_GET[$pname] : null; }
     function qsParam(string $pname, $pvalue): string { return $pvalue !== null ? "&$pname=$pvalue" : "";}
 
+    function getPostedInt(string $pname): ?int { return isset($_POST[$pname]) ? intval($_POST[$pname]) : null; }
+    function getPostedString(string $pname): ?string { return isset($_POST[$pname]) ? $_POST[$pname] : null; }
+
     function readCsv(string $filename): array {
         $rows   = array_map('str_getcsv', file($filename)); // consider fgetcsv() loop instead to process newlines in values, and to save memory
         $header = array_shift($rows);

@@ -115,21 +115,35 @@
         }
 
         public function Contains(Opportunity $opp): bool {
+            return $this->FindIndexByIpId($opp->ipid) !== null;
+        }
+
+        public function FindIndexByIpId(string $ipid): ?int {
             // keeping it simple for now - just scan. In future we could do something like maintain an index (on disk and maybe in memory).
-            $ipid = $opp->ipid . PIPE;
+            $ipid .= PIPE;
             $n = strlen($ipid);
-            foreach($this->lines as $line) {
+            $count = count($this->lines);
+            for ($i = 0; $i < $count; $i++ ) {
+                $line = $this->lines[$i];
                 if (strncmp($line, $ipid, $n) === 0) {
-                    return true;
+                    return $i;
                 }
             }
-            return false;
+            return null;
+        }
+
+        public function RemoveByIpId(string $ipid): void {
+            $i = $this->FindIndexByIpId($ipid);
+            if ($i === null) {
+                throw Log::PanicException("panic: could not find '$ipid' in the current list", get_class($this));
+            }
+            $this->RemoveAt($i);
         }
 
         public function RemoveAt(int $i): void {
             $count = count($this->lines);
             if ($i < 0 || $i >= $count) {
-                throw Log::PanicException("panic: unexpected value $i when count(lines)=$count.");
+                throw Log::PanicException("panic: unexpected value $i when count(lines)=$count");
             }
             unset($this->lines[$i]);
             if ($i < $count-1) {

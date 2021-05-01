@@ -97,17 +97,17 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <form class="form-horizontal" action="save-decision.php" method="POST">
+                    <form class="form-horizontal" action="save-decision.php?vid=<?=$vid?>&ipid=<?=$opp->ipid?>" method="POST">
                         <div class="form-group form-inline" style="margin: 5px 7px 5px 7px;">
                             <div class="form-row">
                                 <div class="col-sm-12">
                                     <div class="navbar-left">
                                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                       <label class="btn btn-info <?=$sameClass?>" onclick="setDirty();">
-                                        <input type="radio" name="options" id="option1" autocomplete="off" checked> Same
+                                        <input type="radio" name="decision" value="1" id="decisionSame" autocomplete="off" checked> Same
                                       </label>
                                       <label class="btn btn-info <?=$diffClass?>" onclick="setDirty();">
-                                        <input type="radio" name="options" id="option3" autocomplete="off"> Different
+                                        <input type="radio" name="decision" value="0" id="decisionDiff" autocomplete="off"> Different
                                       </label>
                                     </div>
                                     <button id="saveButton" class="btn btn-primary hidden" type="submit" onclick="setSaving();">Save</button>
@@ -134,7 +134,7 @@
                                         <? if ($decisionCount>0) { ?>
                                             <?=$badges?> <?=$decisionCount?> decision<?= $decisionCount != 1 ? "s" : "" ?> made!
                                         <? } else { ?>
-                                            <-- click here (:
+                                            <span class="hidden-xs"><-- click here (:</span>
                                         <? } ?>
                                     </div>
 

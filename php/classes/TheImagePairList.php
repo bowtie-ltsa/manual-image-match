@@ -63,6 +63,7 @@
             }
             Log::Out();
             unset($allDirs); unset($leftImages); unset($rightImages);
+            sort($allPairs);
             $this->lines = $allPairs;
             array_unshift($allPairs, $header);
             file_put_contents(self::FILEPATH, implode(PHP_EOL, $allPairs));

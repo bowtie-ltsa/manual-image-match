@@ -25,11 +25,10 @@
         private $vid; // string, the id of the volunteer associated with this BucketList
 
         // called only when the volunteer's bucket list is first created.
-        // this method creates a shuffled copy of TheImagePairList.
+        // this method creates a copy of TheImagePairList, which should be in sorted order.
         private function initialize(): void {
             $this->lines = TheImagePairList::It()->GetAll(); // a copy of the image pair array
-            shuffle($this->lines);
-            $this->save();
+            $this->save(); // expected to be in sorted order!
         }
 
         public function IsEmpty(): bool {
@@ -51,11 +50,49 @@
                 Log::Out();
                 return null;
             }
-            $opp = $this->OpportunityAt($count - 1);
+            $opp = $this->OpportunityAt(mt_rand(0, $count - 1));
             BucketBoard::ForVolunteer($this->vid)->Add($opp);
             Log::Event("A New Opportunity from the vid's Bucket List", $opp->String());
             Log::Out();
             return $opp;
+        }
+
+        // returns the Opportunity identified by ipid from the volunteer's bucket list,
+        // or null if it cannot be found. The bucket list must be in sorted order!
+        public function FindOpportunityByIpId(string $ipid): ?Opportunity {
+            $originalid = $ipid;
+            $ipid .= PIPE;
+            $idlen = strlen($ipid);
+            if ($idlen == 0) {
+                Log::Concern("ipid is the empty string");
+                return null;
+            }
+
+            $arr = $this->lines;
+            $low = 0;
+            $high = count($arr) - 1;
+            if ($high < $low) {
+                Log::Concern("bucket list is empty");
+                return null;
+            }
+
+            while ($low <= $high) {
+                $mid = intval(($low+$high)/2);
+                $compareResult = strncmp($arr[$mid], $ipid, $idlen);
+                if ($compareResult == 0) {
+                    $opp = Opportunity::FromLine($arr[$mid]);
+                    $opp->index = $mid;
+                    Log::Note("Found $originalid at position $mid", $opp->String());
+                    return $opp;
+                } else if ($compareResult < 0) {
+                    $low = $mid + 1;
+                } else {
+                    $high = $mid - 1;
+                }
+            }
+
+            Log::Concern("could not find $originalid in the bucket list");
+            return null;
         }
     }
 ?>

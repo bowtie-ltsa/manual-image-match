@@ -21,6 +21,26 @@
         public function DecisionAt(?int $pos): ?Decision {
             return $this->OpportunityAt($pos);
         }
+
+        public function UpdateDecision(?int $did, ?string $ipid, int $decision): void {
+            Log::In();
+            Log::Mention(__METHOD__);
+            try {
+                $opp = $this->OpportunityAt($did);
+                if ($opp == null) {
+                    throw Log::PanicException("panic: decision $did was not found in the volunteer's Decision List", "ipid=$ipid, decision=$decision");
+                }
+                if ($ipid != null && $opp->ipid != $ipid)
+                
+                $opp->decision = $decision;
+                $this->Update($opp);
+                $this->save();
+            } 
+            finally {
+                Log::Out();
+            }
+        }
+
         
     }
 ?>

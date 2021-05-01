@@ -5,6 +5,7 @@
     // for simplicity of code, we use a mutex to make the coordinator do just one thing at a time. Won't scale to millions
     // or even thousands of volunteers.
     class TheCoordinator {
+
         public static function GetOpportunity(string $vid, ?int $did, ?string $ipid): OpportunityResult {
             try {
                 Log::In();
@@ -22,7 +23,7 @@
                 $mu->Unlock();
                 Log::Mention("Leaving " . __METHOD__);
                 Log::Out();
-                }
+            }
         }
 
         private static function getOpportunityEx(string $vid, ?int $did, ?string $ipid): OpportunityResult {
@@ -82,6 +83,46 @@
             // Really, we shouldn't get to this line, because this condition has already been checked, at the top of this method.
             Log::Concern("We should not get to this point.");
             return new OpportunityResult(null, new VidFinishedException());
+        }
+
+        // updates an existing decision ($did is not null), or saves a new decision ($did is null).
+        public static function SaveDecision(string $vid, ?int $did, string $ipid, int $decision): ?Exception {
+            try {
+                Log::In();
+                Log::Mention(__METHOD__, "did=$did, ipid=$ipid, decision=$decision");
+                $mu = new Mutex("TheCoordinator");
+                if (!$mu->Lock()) {
+                    return new BusyException();
+                }
+                self::SaveDecisionEx($vid, $did, $ipid, $decision);
+                return null;
+            }
+            catch(Exception $ex) {
+                return $ex;
+            }
+            finally {
+                $mu->Unlock();
+                Log::Mention("Leaving " . __METHOD__);
+                Log::Out();
+            }
+        }
+
+        // updates an existing decision ($did is not null), or saves a new decision ($did is null).
+        public static function SaveDecisionEx(string $vid, ?int $did, string $ipid, int $decision): void {
+            if ($did !== null) {
+                DecisionList::ForVolunteer($vid)->UpdateDecision($did, $decision, $ipid);
+                return;
+            }
+            
+            $opp = BucketList::ForVolunteer($vid)->FindOpportunityByIpId($ipid);
+            if ($opp == null) {
+                throw Log::PanicException("panic: opportunity for '$ipid' was not found in the volunteer's Bucket List", "decision=$decision");
+            }
+            $opp->decision = $decision;
+            DecisionList::ForVolunteer($vid)->Add($opp);
+            TheOpportunityBoard::It()->RemoveByIpId($ipid);
+            BucketList::ForVolunteer($vid)->RemoveAt($opp->index);
+            return;        
         }
 
     }
