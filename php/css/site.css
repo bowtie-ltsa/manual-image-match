@@ -27,6 +27,110 @@
     font-family: 'Lobster Two', Helvetica, sans-serif;
 }
 
+.new-tegomin-big
+{
+    font-weight: 100;
+    font-size: 38px;
+    line-height: 1.7;
+    font-family: 'New Tegomin', Helvetica, sans-serif;
+    /*color: green;*/
+}
+
+.new-tegomin-xl
+{
+    font-weight: 300;
+    font-size: 75px;
+    line-height: 1.0;
+    font-family: 'New Tegomin', Helvetica, sans-serif;
+    /*color: green;*/
+}
+
+.new-tegomin
+{
+    font-family: 'New Tegomin', Helvetica, sans-serif;
+}
+
+.helvetica-big
+{
+    font-weight: 100;
+    font-size: 38px;
+    line-height: 1.7;
+    font-family: Helvetica, sans-serif;
+    /*color: green;*/
+}
+
+.helvetica-xl
+{
+    font-weight: 300;
+    font-size: 75px;
+    line-height: 1.0;
+    font-family: Helvetica, sans-serif;
+    /*color: green;*/
+}
+
+.helvetica
+{
+    font-family: Helvetica, sans-serif;
+}
+
+.overflowy
+{
+    overflow-y: auto;
+}
+
+/* make btn-info active look like btn-success-active */
+.btn-info:active,
+.btn-info.active,
+.open > .dropdown-toggle.btn-info {
+  color: #ffffff;
+  background-color: #59822c;
+  border-color: #547a29;
+}
+.btn-info:active:hover,
+.btn-info.active:hover,
+.open > .dropdown-toggle.btn-info:hover,
+.btn-info:active:focus,
+.btn-info.active:focus,
+.open > .dropdown-toggle.btn-info:focus,
+.btn-info:active.focus,
+.btn-info.active.focus,
+.open > .dropdown-toggle.btn-info.focus {
+  color: #ffffff;
+  background-color: #476723;
+  border-color: #324919;
+}
+.btn-info:active,
+.btn-info.active,
+.open > .dropdown-toggle.btn-info {
+  background-image: none;
+}
+/* end */
+
+/* make btn-info active look like btn-info-active */
+/*
+.btn-info:active,
+.btn-info.active {
+  color: #ffffff;
+  background-color: #9a161a;
+  border-color: #911419;
+}
+.btn-info:active:hover,
+.btn-info.active:hover,
+.btn-info:active:focus,
+.btn-info.active:focus,
+.btn-info:active.focus,
+.btn-info.active.focus {
+  color: #ffffff;
+  background-color: #7b1115;
+  border-color: #570c0f;
+}
+.btn-info:active,
+.btn-info.active {
+  background-image: none;
+}
+*/
+/* end */
+
 .tbd
 {
     border: 1px dotted red;

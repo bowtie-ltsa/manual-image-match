@@ -80,6 +80,7 @@
 
             // At this point we know the volunteer's bucket list is empty. The volunteer has finished the study. 
             // Really, we shouldn't get to this line, because this condition has already been checked, at the top of this method.
+            Log::Concern("We should not get to this point.");
             return new OpportunityResult(null, new VidFinishedException());
         }
 
