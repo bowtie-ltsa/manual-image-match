@@ -116,14 +116,14 @@ The following procedure is used by the website software whenever a volunteer sho
 
 # expected workflow for volunteers
 1. user starts with url for host (e.g. http://capture-match.hoza.us)
-2. user get prompted to enter volunteer name (no password, just name, to keep it simple)
+2. user gets prompted to enter volunteer name (no password, just name, to keep it simple)
    - list of volunteers is read from text file, e.g. accounts.csv.
    - accounts.csv file would list one volunteer per line.
 3. user is taken to their first opportunity to make a decision. (i.e. two images are shown, with a prompt to decide.)
    - prompt is read from text file e.g. prompt.txt, e.g. "Are these two pictures of the same salamander?"
 4. user answers "same" or "different" and is then taken to next opportunity.
 5. user can click nav buttons to go back and then forward.
-6. When a user is given an opportunity, it is generally "sticky" (except when several volunteers are swarming on the same image, near the end of a round). "Sticky" means that they must make a decision before being gien a new opportunity. It does not change even if they hit "refresh", edit the URL, leave the site to take a break, etc.
+6. When a user is given an opportunity, it is generally "sticky" (except when several volunteers are swarming on the same image pair, near the end of a round). "Sticky" means that they must make a decision before being given a new opportunity. It does not change even if they hit "refresh", edit the URL, leave the site to take a break, etc.
 
 # ux
 - each decision is recorded as soon as possible (user clicks "same" or "different" and then clicks a button to save that decision.)
