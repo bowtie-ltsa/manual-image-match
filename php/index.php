@@ -42,7 +42,7 @@
                             <label for="vid">Volunteer Id:</label>
                             <input class="form-control" type="text" name="vid" id="vid" autocomplete="off" 
                                     autofocus onfocus="this.select();"
-                                    value="<?=$_COOKIE['vid']?>" 
+                                    value="<?=@$_COOKIE['vid']?>" 
                                     />
                             <button class="btn btn-primary" type="submit">Let's match!</button>
                         </div>

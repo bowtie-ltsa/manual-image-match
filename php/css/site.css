@@ -131,6 +131,18 @@
 */
 /* end */
 
+.infobox {
+    color: white;
+    padding: 7px;
+    font-size: larger;
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+
+.vcr {
+    width: 50px;
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+
 .tbd
 {
     border: 1px dotted red;

@@ -9,7 +9,7 @@
     }
 
     $accounts = readAccounts(ACCOUNTS_FILENAME);
-    $account = $accounts[$vid];
+    $account = @$accounts[$vid];
     if (isset($account) === false) {
         header('Location: index.php?problem=id-not-found');
         exit();

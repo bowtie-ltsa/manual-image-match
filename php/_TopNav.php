@@ -20,6 +20,13 @@
                     <a href="mailto:<?=file_get_contents(CONFIG_DIR . 'contact-email.txt')?>">Contact Us</a>
                 </li>
             </ul>
+            <? if (isset($vid)) { ?>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#">Thank you, <?=$vid?>!</a>
+                    </li>
+                </ul>
+            <? } ?>
         </div>
     </div>
 </div>

@@ -28,6 +28,17 @@
     $question = file_get_contents(CONFIG_DIR . "question.txt");
     $sameClass = $opp->decision === 1 ? "Active" : "";
     $diffClass = $opp->decision === 0 ? "Active" : "";
+    $decisionCount = DecisionList::ForVolunteer($vid)->Count();
+
+    $badgeChars = array("👍", "⭐", "✨", "&#x1F929;");
+    $badges = array();
+    $x = $decisionCount;
+    while ($x > 0) {
+        $char = array_shift($badgeChars);
+        $badges[] = str_repeat($char, $x % 10);
+        $x = intdiv($x, 10);
+    }
+    $badges = implode("", array_reverse($badges));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -89,7 +100,8 @@
                     <form class="form-horizontal" action="save-decision.php" method="POST">
                         <div class="form-group form-inline" style="margin: 5px 7px 5px 7px;">
                             <div class="form-row">
-                                <div class="col-sm-5">
+                                <div class="col-sm-12">
+                                    <div class="navbar-left">
                                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                       <label class="btn btn-info <?=$sameClass?>" onclick="setDirty();">
                                         <input type="radio" name="options" id="option1" autocomplete="off" checked> Same
@@ -98,6 +110,7 @@
                                         <input type="radio" name="options" id="option3" autocomplete="off"> Different
                                       </label>
                                     </div>
+                                    <button id="saveButton" class="btn btn-primary hidden" type="submit" onclick="setSaving();">Save</button>
                                     <script>
                                         var isDirty = false;
                                         var isSaving = false;
@@ -115,17 +128,25 @@
                                             }
                                         };
                                     </script>
+                                    </div>
 
-                                    <button id="saveButton" class="btn btn-primary hidden" type="submit" onclick="setSaving();">Save</button>
+                                    <div class="navbar-nav infobox">
+                                        <? if ($decisionCount>0) { ?>
+                                            <?=$badges?> <?=$decisionCount?> decision<?= $decisionCount != 1 ? "s" : "" ?> made!
+                                        <? } else { ?>
+                                            <-- click here (:
+                                        <? } ?>
+                                    </div>
+
+                                    <div class="navbar-right">
+                                        <button class="btn btn-primary vcr" type="submit">&lt;&lt;</button>
+                                        <button class="btn btn-primary vcr" type="submit">-10</button>
+                                        <button class="btn btn-primary vcr" type="submit">Prev</button>
+                                        <button class="btn btn-primary vcr" type="submit">Next</button>
+                                        <button class="btn btn-primary vcr" type="submit">+10</button>
+                                        <button class="btn btn-primary vcr" type="submit">&gt;&gt;</button>
+                                    </div>
                                 </div>
-                                <div class="col-sm-7"><div class="navbar-right">
-                                    <button class="btn btn-primary" type="submit">&lt;&lt;</button>
-                                    <button class="btn btn-primary" type="submit">-10</button>
-                                    <button class="btn btn-primary" type="submit">Prev</button>
-                                    <button class="btn btn-primary" type="submit">Next</button>
-                                    <button class="btn btn-primary" type="submit">+10</button>
-                                    <button class="btn btn-primary" type="submit">&gt;&gt;</button>
-                                </div></div>
                             </div>
                         </div>
                     </form>

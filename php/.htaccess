@@ -10,3 +10,4 @@ ErrorDocument 500 /500.html
 DirectoryIndex index.php index.shtml index.html index.htm
 
 php_flag display_errors 1
+AddCharset UTF-8 .php
