@@ -45,19 +45,27 @@
         public function foo() { return self::$lists; }
 
         public static function ForFile(string $filepath, OppList &$subtype) {
+            Log::In();
+            Log::Mention(__METHOD__);
             $list = @self::$lists[$filepath];
+            $src = "";
             if ($list == null) {
                 $list = self::Load($filepath, $subtype);
                 self::$lists[$filepath] = $list;
+                $src = "load";
             } else { 
-                $subtype = $list; 
+                $subtype = $list;
+                $src = "cache";
             }
+            Log::Mention("OppList Loaded", Log::Brace("filename", basename($filepath), "src", $src, "count", count($list->lines)));
+            Log::Out();
         }
 
         public static function Load(string $filepath, OppList &$subtype): OppList {
             if (!file_exists($filepath)) {
                 $emptyList = self::HEADERS . PHP_EOL;
                 file_put_contents($filepath, $emptyList);
+                Log::Mention("OppList File Created", basename($filepath));
             }
             $subtype->filepath = $filepath;
 
@@ -97,11 +105,11 @@
         public function Update(Opportunity $opp): void {
             $i = $opp->index;
             if ($i === null) {
-                throw new Exception("panic: index must not be null");
+                throw Log::PanicException("panic: index must not be null");
             }
             if ($i < 0 or $i > count($this->lines)) {
                 $count = count($this->lines);
-                throw new Exception("panic: unexpected index $i with count=$count");
+                throw Log::PanicException("panic: unexpected index $i with count=$count");
             }
             $this->lines[$i] = self::Line($opp);
         }
@@ -121,7 +129,7 @@
         public function RemoveAt(int $i): void {
             $count = count($this->lines);
             if ($i < 0 || $i >= $count) {
-                throw new Exception("panic: unexpected value $i when count(lines)=$count.");
+                throw Log::PanicException("panic: unexpected value $i when count(lines)=$count.");
             }
             unset($this->lines[$i]);
             if ($i < $count-1) {
@@ -136,7 +144,7 @@
 
         public function Add(Opportunity $opp): void {
             if ($this->Contains($opp)) {
-                throw new Exception("panic: opportunity is already part of $this->filepath: $opp->ipid");
+                throw Log::PanicException("panic: opportunity is already part of $this->filepath: $opp->ipid");
             }
             $this->lines[] = self::Line($opp);
             $this->save();

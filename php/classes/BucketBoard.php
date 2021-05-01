@@ -21,10 +21,14 @@
         }
 
         public static function ForVolunteer(string $vid): BucketBoard {
+            Log::In();
+            Log::Mention(__METHOD__);
             $filepath = sprintf(self::FILEPATH_FMT, $vid);
             $bktBoard = new BucketBoard();
             parent::ForFile($filepath, $bktBoard);
             $bktBoard->vid = $vid;
+            Log::Note("BucketBoard Loaded", $bktBoard->Count());
+            Log::Out();
             return $bktBoard;
         }
 
@@ -35,8 +39,16 @@
         // returns the (one and only) opportunity from the volunteer's BucketBoard -- if any.
         // returns null if none.
         public function GetExistingOpportunity(): ?Opportunity {
-            if (count($this->lines) == 0) { return null; }
+            Log::In();
+            Log::Mention(__METHOD__);
+            if (count($this->lines) == 0) { 
+                Log::Mention("No Existing Opportunity from the vid's Bucket Board");
+                Log::Out();
+                    return null; 
+            }
             $opp = Opportunity::FromLine($this->lines[0]);
+            Log::Event("Use Existing Opportunity from the vid's Bucket Board", $opp->String());
+            Log::Out();
             return $opp;
         }
 

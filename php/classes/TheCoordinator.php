@@ -7,6 +7,8 @@
     class TheCoordinator {
         public static function GetOpportunity(string $vid, ?int $did, ?string $ipid): OpportunityResult {
             try {
+                Log::In();
+                Log::Mention(__METHOD__, "did=$did, ipid=$ipid");
                 $mu = new Mutex("TheCoordinator");
                 if (!$mu->Lock()) {
                     return new OpportunityResult(null, new BusyException());
@@ -18,7 +20,9 @@
             }
             finally {
                 $mu->Unlock();
-            }
+                Log::Mention("Leaving " . __METHOD__);
+                Log::Out();
+                }
         }
 
         private static function getOpportunityEx(string $vid, ?int $did, ?string $ipid): OpportunityResult {

@@ -9,7 +9,7 @@
         public $right;
 
         public function __construct(ImageFolder $left, ImageFolder $right) {
-            if ($left->id >= $right->id) { die("panic: invalid FolderPair F{$left->num()}F{$right->num()}"); }
+            if ($left->id >= $right->id) { Log::PanicAndDie("panic: invalid FolderPair F{$left->num()}F{$right->num()}"); }
             $this->left = $left;
             $this->right = $right;
             $this->filename = sprintf("folder-pair-F%d-F%d.txt", $left->num(), $right->num());
