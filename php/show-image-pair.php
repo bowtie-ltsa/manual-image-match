@@ -41,7 +41,7 @@
     <?php require "_Head2.html" ?>
 </head>
 <body>
-    <?php require "_TopNav.html" ?>
+    <?php require "_TopNav.php" ?>
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12 helvetica-big text-successNO">

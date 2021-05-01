@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿<?php 
+    require_once "first-things.php";
+?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <?php require "_Head1.html" ?>
@@ -10,7 +13,7 @@
     <?php require "_Head2.html" ?>
 </head>
 <body>
-    <?php require "_TopNav.html" ?>
+    <?php require "_TopNav.php" ?>
     <div class="container">
         <div class="row">
             <div class="col-sm-6">
@@ -27,10 +30,9 @@
                 <br />
                 <div class="row">
                     <div class="col-xs-12 text-center">
-                        <h3 class="text-primary">
-                            Allowing volunteers to<br />
-                            identify recaptures by hand
-                        </h3>
+                        <span class="">
+                            <?=file_get_contents(CONFIG_DIR . "welcome.html")?>
+                        </span>
                     </div>
                 </div>
                 <br />
@@ -46,6 +48,14 @@
                         </div>
                     </div>
                 </form>
+                <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <span class="">
+                            If you have any questions or concerns, please 
+                            <a href="mailto:<?=file_get_contents(CONFIG_DIR . 'contact-email.txt')?>">contact us</a>.
+                        </span>
+                    </div>
+                </div>
             </div>
             <div class="col-sm-6">
                 <div class="row">
