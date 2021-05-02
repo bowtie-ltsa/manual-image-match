@@ -55,9 +55,15 @@
     <?php require "_TopNav.php" ?>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-12 helvetica-big text-successNO">
+            <div class="hidden-xs col-sm-12 helvetica-big text-successNO">
                 <?=$question?>
             </div>
+            <!-- no need to display the question here; the _TopNav.php took care of it -->
+            <!--
+            <div class="visible-xs col-sm-12 helvetica-md text-successNO">
+                <?=$question?>
+            </div>
+            -->
         </div>
 
         <div class="row overflowy">

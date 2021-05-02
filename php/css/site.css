@@ -54,7 +54,7 @@
 {
     font-weight: 100;
     font-size: 38px;
-    line-height: 1.7;
+    line-height: 1.1;
     font-family: Helvetica, sans-serif;
     /*color: green;*/
 }
@@ -68,9 +68,22 @@
     /*color: green;*/
 }
 
+.helvetica-md
+{
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 1.0;
+    font-family: Helvetica, sans-serif;
+    color: green;
+}
+
 .helvetica
 {
     font-family: Helvetica, sans-serif;
+}
+
+.navhack {
+    width: calc(100% - 95px);
 }
 
 .overflowy

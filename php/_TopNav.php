@@ -1,6 +1,7 @@
 ﻿<div class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
+            <div class="visible-xs pull-left navhack" style="margin:8px; color: white;"><?=@$question?></div>
             <button type="button" class="navbar-toggle btn btn-info" data-toggle="collapse" data-target="#navbar">
                 Menu
                 <!--<span class="icon-bar"></span>
