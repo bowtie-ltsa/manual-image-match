@@ -30,15 +30,26 @@
     $diffClass = $opp->decision === 0 ? "Active" : "";
     $decisionCount = DecisionList::ForVolunteer($vid)->Count();
 
-    $badgeChars = array("👍", "⭐", "✨", "&#x1F929;");
-    $badges = array();
-    $x = $decisionCount;
-    while ($x > 0) {
-        $char = array_shift($badgeChars);
-        $badges[] = str_repeat($char, $x % 10);
-        $x = intdiv($x, 10);
+    if ($decisionCount == 0) {
+        $greeting = "👈 click here 😎"; // 🙂 or maybe 😎 would be good?
+    } else {
+        $badgeChars = array("👍", "⭐", "✨", "&#x1F929;");
+        $badges = array();
+        $x = $decisionCount;
+        $lastChar = "";
+        while ($x > 0) {
+            $char = array_shift($badgeChars);
+            $lastChar = $char;
+            $badges[] = str_repeat($char, $x % 10);
+            $x = intdiv($x, 10);
+        }
+        $bestBadge = $lastChar;
+        $badges = implode("", array_reverse($badges));
+        $plural = $decisionCount != 1 ? "s" : "";
+        $decisionsMade = "$decisionCount decision$plural made!";
+        $greeting = "$badges $decisionsMade";
+        $shortGreeting = "$badges $decisionsMade"; // ignore $bestBadge for now
     }
-    $badges = implode("", array_reverse($badges));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -108,40 +119,34 @@
                             <div class="form-row">
                                 <div class="col-sm-12">
                                     <div class="navbar-left">
-                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                      <label class="btn btn-info <?=$sameClass?>" onclick="setDirty();">
-                                        <input type="radio" name="decision" value="1" id="decisionSame" autocomplete="off"> Same
-                                      </label>
-                                      <label class="btn btn-info <?=$diffClass?>" onclick="setDirty();">
-                                        <input type="radio" name="decision" value="0" id="decisionDiff" autocomplete="off"> Different
-                                      </label>
-                                    </div>
-                                    <button id="saveButton" class="btn btn-primary hidden" type="submit" onclick="setSaving();">Save</button>
-                                    <script>
-                                        var isDirty = false;
-                                        var isSaving = false;
-                                        function setDirty() { 
-                                            isDirty = true;
-                                            $('#saveButton').removeClass('hidden');
-                                        }
-                                        function setSaving() {
-                                            isSaving = true;
-                                        }
-                                        window.onbeforeunload = function() {
-                                            if (isDirty && !isSaving) { 
-                                                // this text may not be shown, but instead trigger the browser's own version of this prompt
-                                                return 'Your decision has not been saved. Are you sure you want to leave the page?'; 
+                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                            <label class="btn btn-info <?=$sameClass?>" onclick="setDirty();">
+                                              <input type="radio" name="decision" value="1" id="decisionSame" autocomplete="off"> Same
+                                            </label>
+                                            <label class="btn btn-info <?=$diffClass?>" onclick="setDirty();">
+                                              <input type="radio" name="decision" value="0" id="decisionDiff" autocomplete="off"> Different
+                                            </label>
+                                        </div>
+                                        <button id="saveButton" class="btn btn-primary hidden" type="submit" onclick="setSaving();">Save</button>
+                                        <span class="hidden-xs" style="color:white;"><?=$greeting?></span>
+                                        <span class="visible-xs" style="color:white; font-size: smaller;"><?=$shortGreeting?></span>
+                                        <script>
+                                            var isDirty = false;
+                                            var isSaving = false;
+                                            function setDirty() { 
+                                                isDirty = true;
+                                                $('#saveButton').removeClass('hidden');
                                             }
-                                        };
-                                    </script>
-                                    </div>
-
-                                    <div class="navbar-nav infobox">
-                                        <? if ($decisionCount>0) { ?>
-                                            <?=$badges?> <?=$decisionCount?> decision<?= $decisionCount != 1 ? "s" : "" ?> made!
-                                        <? } else { ?>
-                                            <span class="hidden-xs"><-- click here (:</span>
-                                        <? } ?>
+                                            function setSaving() {
+                                                isSaving = true;
+                                            }
+                                            window.onbeforeunload = function() {
+                                                if (isDirty && !isSaving) { 
+                                                    // this text may not be shown, but instead trigger the browser's own version of this prompt
+                                                    return 'Your decision has not been saved. Are you sure you want to leave the page?'; 
+                                                }
+                                            };
+                                        </script>
                                     </div>
 
                                     <div class="navbar-right">
