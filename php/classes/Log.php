@@ -124,10 +124,10 @@
                 . PIPE . $callinfo
                 . PHP_EOL;
 
-            file_put_contents(DATA_DIR . "log.psv", $entry, FILE_APPEND);
+            file_put_contents(DATA_DIR . "log.psv", $entry, FILE_APPEND|LOCK_EX);
 
             if (isset($vid) && strlen($vid) > 0) {
-                file_put_contents(DATA_DIR . "$vid-log.psv", $entry, FILE_APPEND);
+                file_put_contents(DATA_DIR . "$vid-log.psv", $entry, FILE_APPEND|LOCK_EX);
             }
         }
 

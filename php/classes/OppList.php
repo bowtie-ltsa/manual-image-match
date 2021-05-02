@@ -42,7 +42,6 @@
         // $lists is a map[$vid]OppList objects that are in memory
         // so we don't have to load them multiple times for the same request
         protected static $lists = array(); 
-        public function foo() { return self::$lists; }
 
         public static function ForFile(string $filepath, OppList &$subtype) {
             Log::In();
@@ -111,6 +110,7 @@
                 $count = count($this->lines);
                 throw Log::PanicException("panic: unexpected index $i with count=$count");
             }
+            Log::Note("Updating in-memory Opportunity", basename($this->filepath), $opp->String());
             $this->lines[$i] = self::Line($opp);
         }
 
@@ -153,6 +153,7 @@
         }
 
         protected function save(): void {
+            Log::Note("Saving List", basename($this->filepath));
             file_put_contents($this->filepath, OppList::HEADERS . PHP_EOL . implode(PHP_EOL, $this->lines));
         }
 

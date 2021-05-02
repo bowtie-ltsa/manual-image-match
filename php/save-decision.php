@@ -15,7 +15,7 @@
     }
 
     $didRaw = getPostedString("did");
-    $did = getIntParam("did");
+    $did = getPostedInt("did");
     if ($did !== null && ($did < 0 || !preg_match('/^[0-9]+$/', $didRaw))) {
         Log::PanicAndDie("panic: the form submission isn't valid");
     }

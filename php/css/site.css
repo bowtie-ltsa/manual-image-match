@@ -86,6 +86,16 @@
     width: calc(100% - 95px);
 }
 
+.not-a-button-hack {
+   cursor: arrow;
+   border: none; 
+}
+
+.not-a-button-hack:hover {
+    cursor: default;
+    border: none; 
+ }
+ 
 .overflowy
 {
     overflow-y: auto;

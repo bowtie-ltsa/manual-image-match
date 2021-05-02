@@ -39,6 +39,7 @@
             $decision = DecisionList::ForVolunteer($vid)->DecisionAt($did);
             if ($decision != null) {
                 $decision->did = $decision->index;
+                Log::Event("Review Decision from the Decision List", $decision->String());
                 return new OpportunityResult($decision, null);
             }
 
@@ -110,7 +111,7 @@
         // updates an existing decision ($did is not null), or saves a new decision ($did is null).
         public static function SaveDecisionEx(string $vid, ?int $did, string $ipid, int $decision): void {
             if ($did !== null) {
-                DecisionList::ForVolunteer($vid)->UpdateDecision($did, $decision, $ipid);
+                DecisionList::ForVolunteer($vid)->UpdateDecision($did, $ipid, $decision);
                 return;
             }
             

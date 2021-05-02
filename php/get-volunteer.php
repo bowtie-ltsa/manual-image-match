@@ -2,7 +2,7 @@
     declare(strict_types=1);
     require_once "first-things.php";
 
-    $vid = $_GET['vid'];
+    $vid = @$_GET['vid'];
     if (!isset($vid) || $vid == '') {
         header('Location: index.php?problem=id-not-present');
         exit();

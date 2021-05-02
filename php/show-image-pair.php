@@ -26,8 +26,12 @@
     }    
 
     $question = file_get_contents(CONFIG_DIR . "question.txt");
-    $sameClass = $opp->decision === 1 ? "Active" : "";
-    $diffClass = $opp->decision === 0 ? "Active" : "";
+    $sameClass = $opp->decision === '1' ? "active" : "";
+    //$sameChecked = $opp->decision === '1' ? 'checked="true"' : "";
+    $sameChecked = "";
+    $diffClass = $opp->decision === '0' ? "active" : "";
+    //$diffChecked = $opp->decision === '0' ? 'checked="true"' : "";
+    $diffChecked = "";
     $decisionCount = DecisionList::ForVolunteer($vid)->Count();
 
     if ($decisionCount == 0) {
@@ -115,16 +119,18 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
+                    <!-- form -->
                     <form class="form-horizontal" action="save-decision.php?vid=<?=$vid?>&ipid=<?=$opp->ipid?>" method="POST">
+                        <? if ($did !== null) { ?> <input type="hidden" name="did" value="<?=$did?>" /> <? } ?>
                         <div class="form-group form-inline" style="margin: 5px 7px 5px 7px;">
                             <div class="form-row">
                                 <div class="col-sm-12">
                                     <div class="navbar-left">
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                            <label class="btn btn-info <?=$sameClass?>" onclick="setDirty();">
+                                            <label class="btn btn-info <?=$sameClass?>" <?=$sameChecked?> onclick="setDirty();">
                                               <input type="radio" name="decision" value="1" id="decisionSame" autocomplete="off"> Same
                                             </label>
-                                            <label class="btn btn-info <?=$diffClass?>" onclick="setDirty();">
+                                            <label class="btn btn-info <?=$diffClass?>" <?=$diffChecked?> onclick="setDirty();">
                                               <input type="radio" name="decision" value="0" id="decisionDiff" autocomplete="off"> Different
                                             </label>
                                         </div>
@@ -150,14 +156,42 @@
                                         </script>
                                     </div>
 
+                                    <?
+                                        $vcrBackwardClass = $did === 0 || $decisionCount === 0 ? "disabled" : "";
+                                        $vcrForwardClass = $did === null ? "disabled" : "";
+                                    ?>
                                     <div class="navbar-right">
-                                        <button class="btn btn-primary vcr" type="button">&lt;&lt;</button>
-                                        <button class="btn btn-primary vcr" type="button">-10</button>
-                                        <button class="btn btn-primary vcr" type="button">Prev</button>
-                                        <button class="btn btn-primary vcr" type="button">Next</button>
-                                        <button class="btn btn-primary vcr" type="button">+10</button>
-                                        <button class="btn btn-primary vcr" type="button">&gt;&gt;</button>
+                                        <button class="btn btn-primary vcr <?=$vcrBackwardClass?>" <?=$vcrBackwardClass?> type="button" onclick="vcr('min');">&lt;&lt;</button>
+                                        <button class="btn btn-primary vcr <?=$vcrBackwardClass?>" <?=$vcrBackwardClass?> type="button" onclick="vcr(-10);">-10</button>
+                                        <button class="btn btn-primary vcr <?=$vcrBackwardClass?>" <?=$vcrBackwardClass?> type="button" onclick="vcr(-1);">Prev</button>
+                                        <div class="btn btn-info not-a-button-hack vcr new-tegomin" style="width: 4em;">
+                                            <? if ($did !== null) { echo "#" . ($did+1); } else { echo "(new)"; } ?> <!-- "#" . ($decisionCount + 1); -->
+                                        </div>
+                                        <button class="btn btn-primary vcr <?=$vcrForwardClass?>"  <?=$vcrForwardClass?>  type="button" onclick="vcr(1);">Next</button>
+                                        <button class="btn btn-primary vcr <?=$vcrForwardClass?>"  <?=$vcrForwardClass?>  type="button" onclick="vcr(10);">+10</button>
+                                        <button class="btn btn-primary vcr <?=$vcrForwardClass?>"  <?=$vcrForwardClass?>  type="button" onclick="vcr('max');">&gt;&gt;</button>
                                     </div>
+                                    <script>
+                                        function vcr(offset) {
+                                            var url = 'show-image-pair.php?vid=<?=$vid?>';
+
+                                            var did = <?= $did ?? $decisionCount ?>; // did -- decision id
+                                            switch (offset) {
+                                                case 'min': did = 0; break;
+                                                case 'max': did = <?=$decisionCount?>; break;
+                                                default: did = did + offset; break;
+                                            }
+                                            var didParam = null;
+                                            if (did < 0) {
+                                                didParam = '&did=0'; // go to first decision
+                                            } else if (did >= <?=$decisionCount?>) {
+                                                didParam = ''; // go to the end (to image pair waiting for a decision)
+                                            } else {
+                                                didParam = '&did=' + did; // go to this decision #
+                                            }
+                                            window.location.href = url + didParam;
+                                        }
+                                    </script>
                                 </div>
                             </div>
                         </div>

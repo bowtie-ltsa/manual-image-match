@@ -18,7 +18,7 @@
 
         private $vid; // string, the id of the volunteer associated with this DecisionList
 
-        public function DecisionAt(?int $pos): ?Decision {
+        public function DecisionAt(?int $pos): ?Opportunity {
             return $this->OpportunityAt($pos);
         }
 
@@ -30,8 +30,17 @@
                 if ($opp == null) {
                     throw Log::PanicException("panic: decision $did was not found in the volunteer's Decision List", "ipid=$ipid, decision=$decision");
                 }
-                if ($ipid != null && $opp->ipid != $ipid)
-                
+                if ($ipid != null && $opp->ipid != $ipid) {
+                    throw Log::PanicException("panic: validation failed: decision $did has ipid '$opp->ipid' not '$ipid'.");
+                }
+                if ($opp->decision === $decision) {
+                    Log::Mention("Decision is not actually changing.");
+                    return;
+                }
+
+                $maxid = $this->Count() - 1;
+                $diff = $maxid - $did;
+                Log::Event("Decision Changed", "did=$did ($diff from the end) ipid=$ipid from=" . $opp->decision . " to=$decision");
                 $opp->decision = $decision;
                 $this->Update($opp);
                 $this->save();
