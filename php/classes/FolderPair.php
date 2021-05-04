@@ -4,7 +4,7 @@
     // represents a pair of image folders; this class is used to generate TheImagePairList, 
     // which is created once for the study and then never changes.
     class FolderPair {
-        public $filename;
+        public $folderPairName;
         public $left;
         public $right;
 
@@ -12,11 +12,11 @@
             if ($left->id >= $right->id) { Log::PanicAndDie("panic: invalid FolderPair F{$left->num()}F{$right->num()}"); }
             $this->left = $left;
             $this->right = $right;
-            $this->filename = sprintf("folder-pair-F%d-F%d.txt", $left->num(), $right->num());
+            $this->folderPairName = sprintf("folder-pair-F%d-F%d", $left->num(), $right->num());
         }
 
-        public function writeFile() {
-            file_put_contents(DATA_DIR . $this->filename, json_encode($this, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+        public function String(): string { 
+            return $this->folderPairName . PIPE . $this->left->String() . PIPE . $this->right->String(); 
         }
     }
 

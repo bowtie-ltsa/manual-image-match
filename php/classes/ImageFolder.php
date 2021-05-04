@@ -14,6 +14,10 @@
         }
 
         public function num(): int { return $this->id + 1; }
+
+        public function String(): string {
+            return $this->id . PIPE . $this->path . PIPE . $this->imageCount;
+        }
     }
 
 ?>

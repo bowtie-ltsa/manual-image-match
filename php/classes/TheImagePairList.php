@@ -29,6 +29,7 @@
             $imageCount = 0;
             $pairCount = 0;
             $allPairs = array();
+            $folderPairs = array();
             $header = OppList::HEADERS;
             Log::In();
             for ($i = 0; $i < $dirCount; $i++) {
@@ -58,7 +59,7 @@
                         }
                     }
                     Log::Out();
-                    $folderPair->writeFile();
+                    $folderPairs[] = $folderPair->String();
                 }
             }
             Log::Out();
@@ -67,6 +68,8 @@
             $this->lines = $allPairs;
             array_unshift($allPairs, $header);
             file_put_contents(self::FILEPATH, implode(PHP_EOL, $allPairs));
+            array_unshift($folderPairs, "folder-pair-name|id1|path1|count1|id2|path2|count2");
+            file_put_contents(DATA_DIR . "folder-pairs.txt", implode(PHP_EOL, $folderPairs));
             Log::Event("Generation Complete", "ImageCount=$imageCount, ImagePairCount=$pairCount");
             Log::Out();
         }
