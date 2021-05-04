@@ -9,7 +9,7 @@
 
     list($opp, $err) = TheCoordinator::GetOpportunity($vid, $did, $ipid)->Result();
     if ($err instanceof BusyException) {
-        header("Location: please-wait.php?vid=$vid". qsParam("did", $did) . qsParam("ipid", $ipid));
+        include "please-wait.php";
         exit();
     }
     if ($err instanceof HaltException) {

@@ -23,7 +23,7 @@
     $err = TheCoordinator::SaveDecision($vid, $did, $ipid, $decision);
 
     if ($err instanceof BusyException) {
-        header("Location: please-wait.php?vid=$vid". qsParam("did", $did) . qsParam("ipid", $ipid));
+        include "please-wait.php";
         exit();
     }
     if ($err instanceof HaltException) {

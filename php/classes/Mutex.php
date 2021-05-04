@@ -19,15 +19,22 @@
 
             if ($timeoutMilliseconds <= 0) { $timeoutMilliseconds = 1; }
 
+            $lastLogTime = null;
             while ($timeoutMilliseconds > 0) {
-                if (flock($this->h, LOCK_EX)) {
-                    // global $vid;
-                    // if ($vid == 'slowpoke') { sleep(7); } // useful for testing
+                if (flock($this->h, LOCK_EX | LOCK_NB)) {
+                    global $vid;
+                    if ($vid == 'slowpoke') { sleep(mt_rand(2,7)); } // useful for testing
                     return true;
                 }
-                sleep(1);
-                $timeoutMilliseconds -= 1000; // this is not accurate but, whatever, close enough for now
+                if ($lastLogTime == null || $lastLogTime - $timeoutMilliseconds >= 450) {
+                    Log::Entry("Waiting...", $timeoutMilliseconds);
+                    $lastLogTime = $timeoutMilliseconds;
+                }
+                $delay = mt_rand(10, 100)*1000; //10-100 milliseconds
+                usleep($delay); // waits at least this long
+                $timeoutMilliseconds -= intval($delay/1000); // undercounted since delay may be longer but that's okay
             }
+            Log::Entry("Too Busy");
             return false;
         }
 
