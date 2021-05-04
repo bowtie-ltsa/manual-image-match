@@ -9,7 +9,7 @@
             require_once $filename;
         }
         catch (Exception $ex) {
-            echo preTrace($ex);
+            // echo preTrace($ex);
             throw $ex;
         }
     });
@@ -36,6 +36,10 @@
         $datadirFile = sprintf("%sdatadir-%s.txt", CONFIG_DIR, explode(":", $_SERVER['HTTP_HOST'])[0]);
         $datadir = file_get_contents($datadirFile);
         define("DATA_DIR", $datadir);
+
+        $backupdirFile = sprintf("%sbackupdir-%s.txt", CONFIG_DIR, explode(":", $_SERVER['HTTP_HOST'])[0]);
+        $backupdir = file_get_contents($backupdirFile);
+        define("BACKUP_DIR", $backupdir);
     }
     define_DATA_DIR();
 
