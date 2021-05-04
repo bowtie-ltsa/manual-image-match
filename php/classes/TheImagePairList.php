@@ -69,7 +69,7 @@
             array_unshift($allPairs, $header);
             file_put_contents(self::FILEPATH, implode(PHP_EOL, $allPairs));
             array_unshift($folderPairs, "folder-pair-name|id1|path1|count1|id2|path2|count2");
-            file_put_contents(DATA_DIR . "folder-pairs.txt", implode(PHP_EOL, $folderPairs));
+            file_put_contents(DATA_DIR . "folder-pairs.psv", implode(PHP_EOL, $folderPairs));
             Log::Event("Generation Complete", "ImageCount=$imageCount, ImagePairCount=$pairCount");
             Log::Out();
         }

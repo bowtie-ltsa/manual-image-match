@@ -31,6 +31,8 @@
                 TheImagePairList::It()->CreateOnce();
             }
 
+            DataZipper::BackupAtInterval();
+
             if (TheOpportunityList::It()->IsEmpty() && TheOpportunityBoard::It()->IsEmpty()) {
                 TheOpportunityList::It()->StartNewRound();
             }

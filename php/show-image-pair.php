@@ -7,7 +7,6 @@
     $did = getIntParam("did");
     $ipid = getStringParam("ipid");
 
-    //DataZipper::Backup();
     list($opp, $err) = TheCoordinator::GetOpportunity($vid, $did, $ipid)->Result();
     if ($err instanceof BusyException) {
         include "please-wait.php";
