@@ -83,7 +83,7 @@
         foreach($list as $item) {
             $name = $item['name'];
             $acct = new Account($name);
-            $accounts[$name] = $acct;
+            $accounts[strtolower($name)] = $acct;
         }
         return $accounts;
     }
