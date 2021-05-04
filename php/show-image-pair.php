@@ -35,8 +35,8 @@
     $decisionCount = DecisionList::ForVolunteer($vid)->Count();
 
     if ($decisionCount == 0) {
-        $greeting = "👈 click here 😎"; // 🙂 or maybe 😎 would be good?
-        $shortGreeting = "☝️ click up there 😎"; // we're stuck below so let's point up!
+        $greeting = "👈 click one of these butons 😎"; // 🙂 or maybe 😎 would be good?
+        $shortGreeting = "☝️ click up there ☝️ 😎"; // we're stuck below so let's point up!
     } else {
         $badgeChars = array("👍", "⭐", "✨", "&#x1F929;");
         $badges = array();
