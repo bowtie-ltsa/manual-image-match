@@ -14,6 +14,6 @@
         header('Location: index.php?problem=id-not-found');
         exit();
     }
-
+    $vid = $account->name; // always use the defined case
     Log::SetVid($vid);
 ?>
