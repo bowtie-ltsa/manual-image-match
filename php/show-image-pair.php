@@ -64,7 +64,7 @@
           content="Decide whether two images match." 
           />
     <meta name="author" content="Bowtie" />
-    <title>Image Pair <?=$opp->ipid?></title>
+    <title>Image Pair <?=$opp->ipid?> | Capture Match</title>
     <?php require "_Head2.html" ?>
 </head>
 <body>
