@@ -30,7 +30,7 @@
         exit();
     }
     if ($err instanceof VidFinishedException) {
-        header("Location: vid-finished.php?$vid=$vid");
+        header("Location: vid-finished.php?vid=$vid");
         exit();
     }
     if ($err != null) {
