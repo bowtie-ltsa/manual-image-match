@@ -12,6 +12,7 @@
         private static $untrustedClientIp = "";
         private static $untrustedForwardedForIp = "";
         private static $remoteIp = "";
+        private static $machineid = "";
 
         
         public static function Init(int $logLevel = LogLevel::Entry): void {
@@ -20,6 +21,7 @@
             self::$untrustedClientIp = @$_SERVER['HTTP_CLIENT_ID']; // not trusted
             self::$untrustedForwardedForIp = @$_SERVER['HTTP_X_FORWARDED_FOR']; // not trusted
             self::$remoteIp = $_SERVER['REMOTE_ADDR']; // trusted but often a proxy's ip (so not that useful)
+            self::$machineid = hash('crc32b', self::$remoteIp . self::$untrustedForwardedForIp . self::$untrustedClientIp);
         }
 
         public static function SetVid(string $vid): void { 
@@ -115,6 +117,7 @@
             $entry = (new DateTime("now", new DateTimeZone('America/Los_Angeles')))->format("Y-m-d H:i:s.v")
                 . PIPE . self::$reqid
                 . PIPE . self::$vid
+                . PIPE . self::$machineid
                 // . PIPE . self::$untrustedClientIp
                 // . PIPE . self::$untrustedForwardedForIp
                 // . PIPE . self::$remoteIp
