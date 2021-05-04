@@ -123,6 +123,8 @@
             DecisionList::ForVolunteer($vid)->Add($opp);
             TheOpportunityBoard::It()->RemoveByIpId($ipid);
             BucketList::ForVolunteer($vid)->RemoveAt($opp->index);
+            $count = DecisionList::ForVolunteer($vid)->Count();
+            Log::Event("Decision Made!", "ipid=$opp->ipid decision=$opp->decision #=$count");
             return;        
         }
 
