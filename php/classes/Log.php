@@ -115,9 +115,9 @@
             $entry = (new DateTime("now", new DateTimeZone('America/Los_Angeles')))->format("Y-m-d H:i:s.v")
                 . PIPE . self::$reqid
                 . PIPE . self::$vid
-                . PIPE . self::$untrustedClientIp
-                . PIPE . self::$untrustedForwardedForIp
-                . PIPE . self::$remoteIp
+                // . PIPE . self::$untrustedClientIp
+                // . PIPE . self::$untrustedForwardedForIp
+                // . PIPE . self::$remoteIp
                 . PIPE . LogLevel::Name($logLevel)
                 . PIPE . $text
                 . PIPE . implode(";", $data)
