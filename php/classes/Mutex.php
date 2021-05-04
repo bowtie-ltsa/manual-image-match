@@ -21,6 +21,8 @@
 
             while ($timeoutMilliseconds > 0) {
                 if (flock($this->h, LOCK_EX)) {
+                    // global $vid;
+                    // if ($vid == 'slowpoke') { sleep(7); } // useful for testing
                     return true;
                 }
                 sleep(1);
@@ -31,7 +33,14 @@
 
         public function Unlock() {
             if (!$this->h) { throw new Exception("not locked"); }
-            unlink($this->name);
+            // do not unlink (delete) the file! because thread #2 is waiting up there and has already
+            // opened it. thread #1 deletes it while #2 is waiting, then it will be gone *while* #2
+            // executes critical section code(!). Kind of a shame to leave the lock file hanging out
+            // there (clutter) but the alternative is a disaster. This is discussed at 
+            // https://stackoverflow.com/q/32904928 (see comment!) and a real alternative is offered 
+            // at https://stackoverflow.com/a/33105860. Though we could just use a do-not-delete flag
+            // file instead (created by threads 2, 3, 4...)... probably....
+            // unlink($this->name); <-- bad idea, don't do this. leave the file in place.
             flock($this->h, LOCK_UN);
             fclose($this->h);
             $this->h = null;
