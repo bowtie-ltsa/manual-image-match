@@ -9,6 +9,9 @@
         public const BACKUP_TRACKER_FILENAME = "last-results-time.txt";
         public const BACKUP_TRACKER_FILEPATH = DATA_DIR . self::BACKUP_TRACKER_FILENAME;
 
+        // it is important that this file does not match the glob pattern for '*' . DecisionList::FILENAME_SUFFIX!
+        public const ALL_DECISIONS_FILE = "!AllDecisions.psv";
+
         private static $globPattern = "*.psv"; // specifically we want to skip the *.lock files which are zero length and maybe trouble
         private static $globFlags = 0;
         private static $zipOptions = null;
@@ -31,6 +34,7 @@
             }
 
             try {
+                self::CombineDecisionLists();
                 $now = (new DateTime("now", new DateTimeZone('America/Los_Angeles')))->format("Y-m-d--H-i-s.v");
                 $finalFilepath = sprintf(self::FILEPATH_FMT, $now);
                 $tempFilepath = $finalFilepath . ".creating";
@@ -46,6 +50,43 @@
             catch(Exception $ex) {
                 Log::Concern("Failed to create a backup", $ex->getMessage());
             }
+        }
+
+        public static function CombineDecisionLists(): void {
+            $filenames = glob(DATA_DIR . '*' . DecisionList::FILENAME_SUFFIX);
+            $allFile = fopen(DATA_DIR . self::ALL_DECISIONS_FILE, "w");
+            if ($allFile === false) {
+                Log::Concern("Unable to open AllDecisions file for writing");
+                return;
+            }
+            try {
+                Log::Entry("Start combining decision files", "count=" . count($filenames));
+                $isFirstFile = true;
+                foreach ($filenames as $filename) {
+                    $file = fopen($filename, "r");
+                    if ($file === false) {
+                        Log::Concern("Skipping file $filename");
+                    }
+                    try {
+                        if (!$isFirstFile) { while(($char = fread($file, 1)) !== false && $char != "\n"); } // skip header
+                        $bytes = stream_copy_to_stream($file, $allFile);
+                        if ($bytes === false) {
+                            Log::Concern("stream copy for '$filename' reports failure without more info");
+                        }
+                        fwrite($allFile, PHP_EOL);
+                    }
+                    catch (Exception $ex) { Log::Warning("Skipping file $filename due to Exception: " . $ex->getMessage()); }
+                    finally { fclose($file); }
+                    $isFirstFile = false;
+                }
+            }
+            catch (Exception $ex) {
+                Log::Warning("Exception: " . $ex->getMessage());
+            }
+            finally {
+                fclose($allFile);
+            }
+            Log::Entry("Done combining decision files");
         }
 
         public static function PruneBackups(): void {

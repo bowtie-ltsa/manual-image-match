@@ -22,6 +22,7 @@
         // - length is always zero for an opportunity in TheOpportunityList.
         // - length is always 1 or more for an opportunity on TheOpportunityBoard.
         // - length is always exactly 1 for an opportunity on a volunteer's OpportunityBoard.
+        // - length is always exactly 1 for a decision on a volunteer's DecisionList. (makes it easy to concat files from all volunteers.)
         public $vidList;
 
         // the decision made for this opportunity. 1=same 0=different null=no decision

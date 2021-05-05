@@ -144,7 +144,7 @@
             ;
 
             clearstatcache(true, self::LOG_PATH);
-            if (filesize(self::LOG_PATH) > self::MAXFILESIZE) { 
+            if (@filesize(self::LOG_PATH) > self::MAXFILESIZE) { 
                 rename(self::LOG_PATH, sprintf(self::ROLL_TO_PATH_FMT, $now)); 
             }
 
@@ -155,7 +155,7 @@
                 $vidLogname = sprintf(self::VID_LOG_PATH_FMT, $vid);
 
                 clearstatcache(true, $vidLogname);
-                if (filesize($vidLogname) > self::MAXFILESIZE) {
+                if (@filesize($vidLogname) > self::MAXFILESIZE) {
                     rename($vidLogname, sprintf(self::VID_ROLL_TO_PATH_FMT, $vid, $now));
                 }
 

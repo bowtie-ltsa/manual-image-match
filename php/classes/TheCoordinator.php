@@ -130,6 +130,7 @@
                 throw Log::PanicException("panic: opportunity for '$ipid' was not found in the volunteer's Bucket List", "decision=$decision");
             }
             $opp->decision = $decision;
+            $opp->vidList = array($vid);
             DecisionList::ForVolunteer($vid)->Add($opp);
             TheOpportunityBoard::It()->RemoveByIpId($ipid);
             BucketList::ForVolunteer($vid)->RemoveAt($opp->index);
