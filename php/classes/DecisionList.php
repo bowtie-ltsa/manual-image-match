@@ -33,7 +33,7 @@
                 if ($ipid != null && $opp->ipid != $ipid) {
                     throw Log::PanicException("panic: validation failed: decision $did has ipid '$opp->ipid' not '$ipid'.");
                 }
-                if ($opp->decision === $decision) {
+                if (intval($opp->decision) === $decision) {
                     Log::Mention("Decision is not actually changing.");
                     return;
                 }
