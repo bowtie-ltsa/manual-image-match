@@ -20,7 +20,6 @@
             if (time() - $lastTime > self::BACKUP_INTERVAL_SECONDS) {
                 self::Backup();
                 touch(self::BACKUP_TRACKER_FILEPATH);
-                self::PruneBackups(); // normally, only prune after a backup
             }
             //self::PruneBackups(); // just for debugging, prune every time
         }
@@ -42,6 +41,7 @@
                     rename($tempFilepath, $finalFilepath);
                     Log::Entry("Finished Backup");
                 }
+                self::PruneBackups(); // normally, only prune after a backup
             }
             catch(Exception $ex) {
                 Log::Concern("Failed to create a backup", $ex->getMessage());
@@ -54,9 +54,9 @@
                 if (!$mu->Lock(5)) {
                     Log::Entry("Someone else is pruning");
                 }
-                Log::Entry("Start Pruning Backups!");
+                Log::Entry("Start Pruning Backups");
                 self::PruneBackupsEx();
-                Log::Entry("Done Pruning Backups!");
+                Log::Entry("Done Pruning Backups");
             }
             catch(Exception $ex) {
                 Log::Entry("Exception Pruning Backups", $ex->getMessage());
