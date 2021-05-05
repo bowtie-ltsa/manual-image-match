@@ -124,6 +124,7 @@
                 if ($did !== null) {
                     Log::Entry("...found $ipid in the volunteer's Decision List", "did=$did ipid=$ipid this time decision=$decision");
                     DecisionList::ForVolunteer($vid)->UpdateDecision($did, $ipid, $decision);
+                    $did = null; // reset $did to null so that navigation will be what the user expects - nav to a new image pair
                     return;
                 }
                 throw Log::PanicException("panic: opportunity for '$ipid' was not found in the volunteer's Bucket List", "decision=$decision");
