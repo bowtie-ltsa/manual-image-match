@@ -3,6 +3,18 @@
 
     // trying to keep logging simple. foolish? might as well be static while we're at it.
     class Log {
+        public const LOG_PFX = "log";
+        public const LOG_EXT = ".psv";
+        public const LOG_PATH = DATA_DIR . self::LOG_PFX . self::LOG_EXT;
+
+        public const MAXFILESIZE = 10*1024*1024;
+
+        public const ROLL_TO_FMT = "-to-%s";
+        public const ROLL_TO_PATH_FMT = DATA_DIR . self::LOG_PFX . self::ROLL_TO_FMT . self::LOG_EXT;
+
+        public const VID_LOG_PFX_FMT = "%s-log";
+        public const VID_LOG_PATH_FMT = DATA_DIR . self::VID_LOG_PFX_FMT . self::LOG_EXT;
+        public const VID_ROLL_TO_PATH_FMT = DATA_DIR . self::VID_LOG_PFX_FMT . self::ROLL_TO_FMT . self::LOG_EXT;
 
         private static $logLevel = LogLevel::Entry;
         private static $reqid = "";
@@ -112,9 +124,12 @@
                 (@$bt[2]['function']
                     ? @$bt[2]['class'] . @$bt[2]['type']  . @$bt[2]['function'] 
                     : basename($bt[1]['file']))
-                . ':' . @$bt[1]['line'];
+                . ':' . @$bt[1]['line']
+            ;
 
-            $entry = (new DateTime("now", new DateTimeZone('America/Los_Angeles')))->format("Y-m-d H:i:s.v")
+            $now = (new DateTime("now", new DateTimeZone('America/Los_Angeles')))->format("Y-m-d--H-i-s.v");
+
+            $entry = $now
                 . PIPE . self::$reqid
                 . PIPE . self::$vid
                 . PIPE . self::$machineid
@@ -125,13 +140,26 @@
                 . PIPE . $text
                 . PIPE . implode(";", $data)
                 . PIPE . $callinfo
-                . PHP_EOL;
+                . PHP_EOL
+            ;
 
-            file_put_contents(DATA_DIR . "log.psv", $entry, FILE_APPEND|LOCK_EX);
+            clearstatcache(true, self::LOG_PATH);
+            if (filesize(self::LOG_PATH) > self::MAXFILESIZE) { 
+                rename(self::LOG_PATH, sprintf(self::ROLL_TO_PATH_FMT, $now)); 
+            }
+
+            file_put_contents(self::LOG_PATH, $entry, FILE_APPEND|LOCK_EX);
 
             global $vid;
             if (isset($vid) && strlen($vid) > 0) {
-                file_put_contents(DATA_DIR . "$vid-log.psv", $entry, FILE_APPEND|LOCK_EX);
+                $vidLogname = sprintf(self::VID_LOG_PATH_FMT, $vid);
+
+                clearstatcache(true, $vidLogname);
+                if (filesize($vidLogname) > self::MAXFILESIZE) {
+                    rename($vidLogname, sprintf(self::VID_ROLL_TO_PATH_FMT, $vid, $now));
+                }
+
+                file_put_contents($vidLogname, $entry, FILE_APPEND|LOCK_EX);
             }
         }
 

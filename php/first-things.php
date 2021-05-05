@@ -18,17 +18,6 @@
     require_once "functions/stackTrace.php";
     require_once "functions/cast.php";
 
-    //Log::Init(LogLevel::Debug);
-    Log::Init(LogLevel::Entry);
-    //Log::Init(LogLevel::Event);
-
-    define("RQ_VID", "custom_data_vid");
-    $_REQUEST[RQ_VID] = '';
-    define("RQ_REQID", "custom_data_request_id");
-    $_REQUEST[RQ_REQID] = hash('crc32b', $_SERVER['REMOTE_ADDR'] . $_SERVER['REQUEST_TIME_FLOAT'] . $_SERVER['REMOTE_PORT']);
-
-    
-
     define("IMAGE_DATA_DIR", 'image-data/');
     define("CONFIG_DIR", "config/");
 
@@ -42,6 +31,10 @@
         define("BACKUP_DIR", $backupdir);
     }
     define_DATA_DIR();
+
+    //Log::Init(LogLevel::Debug);
+    Log::Init(LogLevel::Entry);
+    //Log::Init(LogLevel::Event);
 
     define("LOCKTIME", 3000);
     define("PIPE", "|");
