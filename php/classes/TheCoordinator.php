@@ -119,6 +119,13 @@
             
             $opp = BucketList::ForVolunteer($vid)->FindOpportunityByIpId($ipid);
             if ($opp == null) {
+                // maybe user has multiple browsers going and submitted on both (maybe going from cell to desk)? let's check past decisions ...
+                $did = DecisionList::ForVolunteer($vid)->FindIndexByIpId($ipid);
+                if ($did !== null) {
+                    Log::Entry("...found $ipid in the volunteer's Decision List", "did=$did ipid=$ipid this time decision=$decision");
+                    DecisionList::ForVolunteer($vid)->UpdateDecision($did, $ipid, $decision);
+                    return;
+                }
                 throw Log::PanicException("panic: opportunity for '$ipid' was not found in the volunteer's Bucket List", "decision=$decision");
             }
             $opp->decision = $decision;
