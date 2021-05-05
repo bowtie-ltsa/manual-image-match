@@ -23,7 +23,7 @@
             while ($timeoutMilliseconds > 0) {
                 if (flock($this->h, LOCK_EX | LOCK_NB)) {
                     // global $vid;
-                    // if ($vid == 'slowpoke') { sleep(mt_rand(2,7)); } // useful for testing
+                    // if ($vid == 'slowpoke-dev') { usleep(mt_rand(1500*1000,7000*1000)); } // useful for testing
                     return true;
                 }
                 if ($lastLogTime == null || $lastLogTime - $timeoutMilliseconds >= 450) {
