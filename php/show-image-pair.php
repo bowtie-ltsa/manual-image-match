@@ -20,21 +20,7 @@
         exit();
     }
     if ($err != null) {
-        ?>
-            hmm, something unexpected happenned and we made a note of it.
-            <br />
-            <br />
-            That's about all we can say.
-            Please <a href="show-image-pair.php?vid=<?=$vid?>">continue matching</a> if you can! We'll figure it out.
-            <br />
-            <br />
-            The error has been logged and will be investigated.
-            If you have time, please <a href="mailto:<?=file_get_contents(CONFIG_DIR . 'contact-email.txt')?>">drop a line</a>
-            to let us know you're interested in helping us figure out what went wrong.
-            <br />
-            <br />
-        <?
-        echo preTrace($err);
+        include 'message-for-unexpected-error.php';
         exit();
     }    
 
