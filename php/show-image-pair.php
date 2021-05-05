@@ -119,7 +119,9 @@
             <div class="row">
                 <div class="col-sm-12">
                     <!-- form -->
-                    <form class="form-horizontal" action="save-decision.php?vid=<?=$vid?>&ipid=<?=$opp->ipid?>" method="POST">
+                    <form class="form-horizontal" action="save-decision.php?vid=<?=$vid?>&ipid=<?=$opp->ipid?>" method="POST"
+                        onsubmit="$('#saveButton').prop('disabled', true).html('<i>please wait...</i>').addClass('btn-warning disabled');">
+                        <!-- disabling the button is important but requires always-pointer-hack (arrow pointer) on the button to avoid left-over "not allowed" cursor after page loads -->
                         <? if ($did !== null) { ?> <input type="hidden" name="did" value="<?=$did?>" /> <? } ?>
                         <div class="form-group form-inline" style="margin: 5px 7px 5px 7px;">
                             <div class="form-row">
@@ -133,7 +135,7 @@
                                               <input type="radio" name="decision" value="0" id="decisionDiff" autocomplete="off"> Different
                                             </label>
                                         </div>
-                                        <button id="saveButton" class="btn btn-primary hidden" type="submit" onclick="setSaving();">Save</button>
+                                        <button id="saveButton" class="btn btn-primary always-pointer-hack hidden" type="submit" onclick="setSaving();">Save</button>
                                         <span class="hidden-xs" style="color:white;"><?=$greeting?></span>
                                         <span class="visible-xs" style="color:white; font-size: smaller;"><?=$shortGreeting?></span>
                                         <script>

@@ -87,12 +87,17 @@
 }
 
 .not-a-button-hack {
-   cursor: arrow;
+   cursor: default;
    border: none; 
 }
 
 .not-a-button-hack:hover {
     cursor: default;
+    border: none; 
+ }
+ 
+.always-pointer-hack:hover {
+    cursor: pointer;
     border: none; 
  }
  
