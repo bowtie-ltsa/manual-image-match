@@ -85,7 +85,7 @@
             <div class="col-xs-6">
                 <div class="row">
                     <div class="col-xs-12">
-                        <img class="img-responsive center-block" src="/<?=$opp->path1?>" alt="/<?=$opp->path1?>" />
+                        <img class="img-responsive center-block" src="/<?=IMAGE_DATA_DIR?><?=$opp->path1?>" alt="/<?=$opp->path1?>" />
                     </div>
                 </div>
                 <div class="row">
@@ -97,7 +97,7 @@
             <div class="col-xs-6">
                 <div class="row">
                     <div class="col-xs-12">
-                        <img class="img-responsive center-block" src="/<?=$opp->path2?>" alt="/<?=$opp->path2?>" />
+                        <img class="img-responsive center-block" src="/<?=IMAGE_DATA_DIR?><?=$opp->path2?>" alt="/<?=$opp->path2?>" />
                     </div>
                 </div>
                 <div class="row">

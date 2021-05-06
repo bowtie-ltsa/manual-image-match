@@ -4,7 +4,7 @@
     // for at least, we keep the static classes static, but try to keep the code DRY.
     // eventually we may take the time to create a generic, nonstatic OpportunityList....
     class OppList {
-        public const HEADERS = "ipid|path1|path2|vidList|decision";
+        public const HEADERS = "ipid|id1|id2|path1|path2|vidList|decision";
 
         public static function HeadersArray(): array { 
             if (self::$headersArray == null) {

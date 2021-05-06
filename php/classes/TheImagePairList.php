@@ -55,7 +55,11 @@
                             $X = $x+1; $Y = $y+1;
                             Log::Entry("F${I}C$X-F${J}C$Y: $leftImages[$x] ==?== $rightImages[$y]");
                             $pairCount++;
-                            $allPairs[] = sprintf("F${I}C$X-F${J}C$Y|$leftImages[$x]|$rightImages[$y]||");
+                            $leftImage = substr($leftImages[$x], strlen(IMAGE_DATA_DIR));
+                            $rightImage = substr($rightImages[$y], strlen(IMAGE_DATA_DIR));
+                            preg_match('/([\d]+)[^\d]+$/', $leftImage, $leftMatches);
+                            preg_match('/([\d]+)[^\d]+$/', $rightImage, $rightMatches);
+                            $allPairs[] = sprintf("F${I}C$X-F${J}C$Y|$leftMatches[1]|$rightMatches[1]|$leftImage|$rightImage||");
                         }
                     }
                     Log::Out();
