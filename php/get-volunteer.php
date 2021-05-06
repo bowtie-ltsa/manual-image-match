@@ -15,6 +15,7 @@
         header("Location: vid-not-found.php?vid=$vid");
         exit();
     }
+    Account::Set($account);
     $vid = $account->name; // always use the defined case
     Log::SetVid($vid);
 ?>

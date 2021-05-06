@@ -21,6 +21,15 @@
                     <a href="mailto:<?=file_get_contents(CONFIG_DIR . 'contact-email.txt')?>">Contact Us</a>
                 </li>
             </ul>
+
+            <? if (Account::IsAdmin()) { ?>
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="get-results.php?vid=<?=$vid?>">Results</a>
+                    </li>
+                </ul>
+            <? } ?>
+
             <? if (isset($vid)) { ?>
                 <ul class="nav navbar-nav navbar-right">
                     <li>

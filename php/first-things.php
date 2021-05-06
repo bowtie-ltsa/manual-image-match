@@ -21,16 +21,22 @@
     define("IMAGE_DATA_DIR", 'image-data/');
     define("CONFIG_DIR", "config/");
 
-    function define_DATA_DIR() {
-        $datadirFile = sprintf("%sdatadir-%s.txt", CONFIG_DIR, explode(":", $_SERVER['HTTP_HOST'])[0]);
+    function define_ENV_CONSTANTS() {
+        $envName = explode(":", $_SERVER['HTTP_HOST'])[0];
+
+        $datadirFile = sprintf("%sdatadir-%s.txt", CONFIG_DIR, $envName);
         $datadir = file_get_contents($datadirFile);
         define("DATA_DIR", $datadir);
 
-        $backupdirFile = sprintf("%sbackupdir-%s.txt", CONFIG_DIR, explode(":", $_SERVER['HTTP_HOST'])[0]);
+        $backupdirFile = sprintf("%sbackupdir-%s.txt", CONFIG_DIR, $envName);
         $backupdir = file_get_contents($backupdirFile);
         define("BACKUP_DIR", $backupdir);
+
+        $backupurlFile = sprintf("%sbackup-url-%s.txt", CONFIG_DIR, $envName);
+        $backupurl = file_get_contents($backupurlFile);
+        define("BACKUP_URL", $backupurl);
     }
-    define_DATA_DIR();
+    define_ENV_CONSTANTS();
 
     //Log::Init(LogLevel::Debug);
     Log::Init(LogLevel::Entry);
@@ -66,8 +72,12 @@
     function readCsv(string $filename): array {
         $rows   = array_map('str_getcsv', file($filename)); // consider fgetcsv() loop instead to process newlines in values, and to save memory
         $header = array_shift($rows);
+        $countColumns = count($header);
         $csv    = array();
+        $i = 0;
         foreach($rows as $row) {
+            $i++;
+            if (count($row) != $countColumns) { throw new Exception("panic: invalid row $i reading accounts"); }
             $csv[] = array_combine($header, $row);
         }
         return $csv;
@@ -78,7 +88,8 @@
         $list = readCsv($filename);
         foreach($list as $item) {
             $name = $item['name'];
-            $acct = new Account($name);
+            $role = @$item['role'];
+            $acct = new Account($name, $role);
             $accounts[strtolower($name)] = $acct;
         }
         return $accounts;
