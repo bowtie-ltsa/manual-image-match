@@ -27,6 +27,9 @@
                     <li>
                         <a href="get-results.php?vid=<?=$vid?>">Results</a>
                     </li>
+                    <li>
+                        <a href="update-accounts.php?vid=<?=$vid?>">Accounts</a>
+                    </li>
                 </ul>
             <? } ?>
 

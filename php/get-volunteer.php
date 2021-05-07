@@ -8,8 +8,7 @@
         exit();
     }
 
-    $filename = sprintf("%saccounts-%s.csv", CONFIG_DIR, explode(":", $_SERVER['HTTP_HOST'])[0]);
-    $accounts = readAccounts($filename);
+    $accounts = Account::ReadAccounts();
     $account = @$accounts[strtolower(trim($vid))];
     if (isset($account) === false) {
         header("Location: vid-not-found.php?vid=$vid");

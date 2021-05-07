@@ -17,9 +17,6 @@
     }
     rsort($files); // sorting by name also sorts by time, from youngest to oldest, due to file naming convention
 ?>
-<?php 
-    require_once "first-things.php";
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

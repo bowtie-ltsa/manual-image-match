@@ -69,29 +69,4 @@
     function getPostedInt(string $pname): ?int { return isset($_POST[$pname]) ? intval($_POST[$pname]) : null; }
     function getPostedString(string $pname): ?string { return isset($_POST[$pname]) ? $_POST[$pname] : null; }
 
-    function readCsv(string $filename): array {
-        $rows   = array_map('str_getcsv', file($filename)); // consider fgetcsv() loop instead to process newlines in values, and to save memory
-        $header = array_shift($rows);
-        $countColumns = count($header);
-        $csv    = array();
-        $i = 0;
-        foreach($rows as $row) {
-            $i++;
-            if (count($row) != $countColumns) { throw new Exception("panic: invalid row $i reading accounts"); }
-            $csv[] = array_combine($header, $row);
-        }
-        return $csv;
-    }
-
-    function readAccounts(string $filename): array {
-        $accounts = array();
-        $list = readCsv($filename);
-        foreach($list as $item) {
-            $name = $item['name'];
-            $role = @$item['role'];
-            $acct = new Account($name, $role);
-            $accounts[strtolower($name)] = $acct;
-        }
-        return $accounts;
-    }
 ?>
