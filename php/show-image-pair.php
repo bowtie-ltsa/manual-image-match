@@ -36,6 +36,13 @@
     if ($decisionCount == 0) {
         $greeting = "👈 click one of these butons 😎"; // 🙂 or maybe 😎 would be good?
         $shortGreeting = "☝️ click up there ☝️ 😎"; // we're stuck below so let's point up!
+    } else if ($did !== null) {
+        // $greeting = "change your mind? no problem. 🙂 when you're done click " 
+        //     . '<button class="btn btn-primary vcr" type="button" onclick="vcr(\'max\');">&gt;&gt;</button>'
+        //     . " to resume";
+        //$shortGreeting = "change your mind? no problem. 🙂 when you're done click the ⏩ button";
+        $greeting = "↩ (review mode) click the ⏩ button to resume";
+        $shortGreeting = $greeting;
     } else {
         $badgeChars = array("👍", "⭐", "✨", "&#x1F929;");
         $badges = array();
