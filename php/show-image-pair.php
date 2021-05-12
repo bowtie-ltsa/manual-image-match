@@ -115,8 +115,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12">
-                <?pre_dump($opp)?>
+            <div class="col-sm-12" style="margin-bottom: 50px;"> <!-- quick fix for bottom fixed div -->
             </div>
         </div>
         <!--?php require "_zFooter-Nav.php" -->
