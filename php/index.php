@@ -62,7 +62,7 @@
                     <div class="col-xs-12">
                         <!-- img size is "responsive" (fluid) for xs only, now that we are using 10 columns for sm+, above. -->
                         <!--<img class="img-responsive" src="images/LakeMelakwa.jpg" />-->
-                        <img class="img-responsive center-block" src="/images/bowtie.png" alt="bowtie the long-toed salamander" />
+                        <img class="img-responsive center-block" src="/images/bowtie.jpg" alt="bowtie the long-toed salamander" />
                     </div>
                 </div>
             </div>
