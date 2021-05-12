@@ -135,10 +135,10 @@
                                 <div class="col-sm-12">
                                     <div class="navbar-left">
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                            <label class="btn btn-info <?=$sameClass?>" <?=$sameChecked?> onclick="setDirty();">
+                                            <label class="btn btn-decision <?=$sameClass?>" <?=$sameChecked?> onclick="setDirty();">
                                               <input type="radio" name="decision" value="1" id="decisionSame" autocomplete="off"> Same
                                             </label>
-                                            <label class="btn btn-info <?=$diffClass?>" <?=$diffChecked?> onclick="setDirty();">
+                                            <label class="btn btn-decision <?=$diffClass?>" <?=$diffChecked?> onclick="setDirty();">
                                               <input type="radio" name="decision" value="0" id="decisionDiff" autocomplete="off"> Different
                                             </label>
                                         </div>

@@ -106,30 +106,44 @@
     overflow-y: auto;
 }
 
-/* make btn-info active look like btn-success-active */
-.btn-info:active,
-.btn-info.active,
-.open > .dropdown-toggle.btn-info {
+/* a custom look for decision buttons: yellow when not active, green when active */
+.btn-decision, .btn-group > .btn-decision:last-child:not(first-child) {
+  color: #fff;
+  background-color: #ffc107;
+  border-color: #ffc107;
+  border-radius: 10px;
+  margin-left: 3px;
+}
+
+.btn-decision:hover, .btn-group > .btn-decision:hover:last-child:not(first-child) {
+  color: #fff;
+  background-color: #d9a406;
+  border-color: #cc9a06;
+}
+
+.btn-decision:active,
+.btn-decision.active, .btn-group > .btn-decision.active:last-child:not(first-child),
+.open > .dropdown-toggle.btn-decision {
   color: #ffffff;
   background-color: #59822c;
   border-color: #547a29;
 }
-.btn-info:active:hover,
-.btn-info.active:hover,
-.open > .dropdown-toggle.btn-info:hover,
-.btn-info:active:focus,
-.btn-info.active:focus,
-.open > .dropdown-toggle.btn-info:focus,
-.btn-info:active.focus,
-.btn-info.active.focus,
-.open > .dropdown-toggle.btn-info.focus {
+.btn-decision:active:hover,
+.btn-decision.active:hover,
+.open > .dropdown-toggle.btn-decision:hover,
+.btn-decision:active:focus,
+.btn-decision.active:focus,
+.open > .dropdown-toggle.btn-decision:focus,
+.btn-decision:active.focus,
+.btn-decision.active.focus,
+.open > .dropdown-toggle.btn-decision.focus {
   color: #ffffff;
   background-color: #476723;
   border-color: #324919;
 }
-.btn-info:active,
-.btn-info.active,
-.open > .dropdown-toggle.btn-info {
+.btn-decision:active,
+.btn-decision.active,
+.open > .dropdown-toggle.btn-decision {
   background-image: none;
 }
 /* end */
