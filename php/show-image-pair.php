@@ -115,7 +115,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12" style="margin-bottom: 50px;"> <!-- quick fix for bottom fixed div -->
+            <div class="col-sm-12" style="margin-bottom: 150px;"> <!-- quick fix for bottom fixed div -->
             </div>
         </div>
         <!--?php require "_zFooter-Nav.php" -->
