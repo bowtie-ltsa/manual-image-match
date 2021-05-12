@@ -7,10 +7,6 @@
     $files = glob(sprintf(DataZipper::FILEPATH_FMT, '*'));
     $numFiles = count($files);
     if ($files === false || $numFiles === 0) {
-        debug("glob=" . sprintf(DataZipper::FILEPATH_FMT, '*'));
-        debug("numFiles=$numFiles");
-        pre_dump($files);
-        die("what");
         Log::Concern("no results found");
         header("Location: index.php?problem=no-results-found!");
         exit();
