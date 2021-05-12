@@ -106,27 +106,43 @@
     overflow-y: auto;
 }
 
-/* a custom look for decision buttons: yellow when not active, green when active */
-.btn-decision, .btn-group > .btn-decision:last-child:not(first-child) {
+/* a custom look for decision buttons: yellow border when not active, all green when active, divider between buttons when neither active */
+.btn-decision {
   color: #fff;
-  background-color: #ffc107;
+  /* background-color: #ffc107; */
   border-color: #ffc107;
+  border-width: 3px;
   border-radius: 10px;
-  margin-left: 3px;
 }
 
-.btn-decision:hover, .btn-group > .btn-decision:hover:last-child:not(first-child) {
+.btn-group > .btn-decision:last-child,
+.btn-group > .btn-decision:last-child:hover,
+.btn-group > .btn-decision.active.focus:last-child {
+  /* margin-left: 3px; */
+  /* border-left: none; */
+  border-left: 1px solid #476723;
+}
+
+.btn-group > .btn-decision:first-child,
+.btn-group > .btn-decision:first-child:hover, 
+.btn-group > .btn-decision.active.focus:first-child{
+  /* border-right: none; */
+  border-right: 1px solid #476723;
+}
+
+.btn-decision:hover {
   color: #fff;
   background-color: #d9a406;
   border-color: #cc9a06;
 }
 
 .btn-decision:active,
-.btn-decision.active, .btn-group > .btn-decision.active:last-child:not(first-child),
+.btn-decision.active,
 .open > .dropdown-toggle.btn-decision {
   color: #ffffff;
   background-color: #59822c;
-  border-color: #547a29;
+  /* border-color: #547a29; */
+  border-color: #cc9a06;
 }
 .btn-decision:active:hover,
 .btn-decision.active:hover,
@@ -139,7 +155,8 @@
 .open > .dropdown-toggle.btn-decision.focus {
   color: #ffffff;
   background-color: #476723;
-  border-color: #324919;
+  /* border-color: #324919; */
+  border-color: #cc9a06;
 }
 .btn-decision:active,
 .btn-decision.active,
