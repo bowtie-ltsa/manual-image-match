@@ -81,7 +81,7 @@
             $this->Update($opp);
             $this->save();
 
-            Log::Event("A New Opportunity from The Opportunity Board");
+            Log::Event("A New Opportunity from The Opportunity Board", $opp->String());
             Log::Out();
             return $opp;
         }
