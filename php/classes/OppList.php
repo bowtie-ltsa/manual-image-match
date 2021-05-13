@@ -133,7 +133,14 @@
         }
 
         public function RemoveByIpId(string $ipid): void {
+            $this->RemoveByIpIdEx($ipid, false);
+        }
+        
+        public function RemoveByIpIdEx(string $ipid, bool $okayIfMissing): void {
             $i = $this->FindIndexByIpId($ipid);
+            if ($i === null && $okayIfMissing) {
+                return;
+            }
             if ($i === null) {
                 throw Log::PanicException("panic: could not find '$ipid' in the current list", get_class($this));
             }

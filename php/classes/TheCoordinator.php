@@ -124,6 +124,8 @@
                 if ($did !== null) {
                     Log::Entry("...found $ipid in the volunteer's Decision List", "did=$did ipid=$ipid this time decision=$decision");
                     DecisionList::ForVolunteer($vid)->UpdateDecision($did, $ipid, $decision);
+                    TheOpportunityBoard::It()->RemoveByIpIdEx($ipid, true);
+                    BucketBoard::ForVolunteer($vid)->RemoveByIpIdEx($ipid, true);
                     $did = null; // reset $did to null so that navigation will be what the user expects - nav to a new image pair
                     return;
                 }
@@ -132,8 +134,9 @@
             $opp->decision = $decision;
             $opp->vidList = array($vid);
             DecisionList::ForVolunteer($vid)->Add($opp);
-            TheOpportunityBoard::It()->RemoveByIpId($ipid);
             BucketList::ForVolunteer($vid)->RemoveAt($opp->index);
+            TheOpportunityBoard::It()->RemoveByIpIdEx($ipid, true);
+            BucketBoard::ForVolunteer($vid)->RemoveByIpIdEx($ipid, true);
             $count = DecisionList::ForVolunteer($vid)->Count();
             Log::Event("Decision Made!", "ipid=$opp->ipid decision=$opp->decision #=$count");
             return;        
